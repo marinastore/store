@@ -1,0 +1,9 @@
+
+/Web/bin
+/Web/obj
+*.suo
+*.testsettings
+*.testsettings
+*.vsmdi
+/Tests/bin
+/Tests/obj
