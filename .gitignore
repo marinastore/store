@@ -7,3 +7,4 @@
 *.vsmdi
 /Tests/bin
 /Tests/obj
+/_ReSharper.Store
