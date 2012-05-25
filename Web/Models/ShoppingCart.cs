@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Marina.Store.Web.Models
@@ -7,11 +8,11 @@ namespace Marina.Store.Web.Models
     {
         public Guid Id { get; set; }
 
-        public CartLine[] Lines { get; set; }
+        public ICollection<CartItem> Items { get; set; }
 
         public decimal Total
         {
-            get { return Lines.Sum(l => l.Product.Price); }
+            get { return Items.Sum(l => l.Product.Price); }
         }
 
     }

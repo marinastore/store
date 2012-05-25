@@ -14,6 +14,7 @@
     <AssemblyName>Marina.Store.Web</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>false</UseIISExpress>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -33,6 +34,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework">
+      <HintPath>..\packages\EntityFramework.4.3.1\lib\net40\EntityFramework.dll</HintPath>
+    </Reference>
     <Reference Include="FluentValidation">
       <HintPath>..\packages\FluentValidation.3.3.1.0\lib\Net40\FluentValidation.dll</HintPath>
     </Reference>
@@ -50,6 +54,15 @@
     </Reference>
     <Reference Include="Moq">
       <HintPath>..\packages\Moq.4.0.10827\lib\NET40\Moq.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Data.SqlServerCe, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\SqlServerCompact.4.0.8482.1\lib\System.Data.SqlServerCe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.SqlServerCe.Entity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EntityFramework.SqlServerCompact.4.3.2\lib\net40\System.Data.SqlServerCe.Entity.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Web.WebPages" />
@@ -75,9 +88,16 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataAccess\StoreDbContext.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\CartItem.cs" />
+    <Compile Include="Models\Category.cs" />
+    <Compile Include="Models\Param.cs" />
+    <Compile Include="Models\Product.cs" />
+    <Compile Include="Models\ProductAvailability.cs" />
+    <Compile Include="Models\ShoppingCart.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -157,7 +177,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controllers\" />
-    <Folder Include="Models\" />
+    <Folder Include="ViewModels\" />
     <Folder Include="Views\Shared\" />
   </ItemGroup>
   <ItemGroup>
@@ -193,4 +213,11 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
+  <PropertyGroup>
+    <PostBuildEvent>
+if not exist "$(TargetDir)x86" md "$(TargetDir)x86"
+xcopy /s /y "$(SolutionDir)packages\SqlServerCompact.4.0.8482.1\NativeBinaries\x86\*.*" "$(TargetDir)x86"
+if not exist "$(TargetDir)amd64" md "$(TargetDir)amd64"
+xcopy /s /y "$(SolutionDir)packages\SqlServerCompact.4.0.8482.1\NativeBinaries\amd64\*.*" "$(TargetDir)amd64"</PostBuildEvent>
+  </PropertyGroup>
 </Project>

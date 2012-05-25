@@ -8,3 +8,5 @@
 /Tests/bin
 /Tests/obj
 /_ReSharper.Store
+/TestResults
+/Web/App_Data/Marina.Store.Web.DataAccess.StoreDbContext.sdf
