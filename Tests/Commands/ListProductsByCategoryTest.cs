@@ -17,11 +17,12 @@ namespace Marina.Store.Tests.Commands
             using(var db = new StoreDbContext())
             {
                 var cmd = new ListProductsByCategoryCommand(db);
-                var products = cmd.ListProducts(0);
+                var result = cmd.Execute(0);
 
-                Assert.IsNotNull(products);
-                Assert.IsTrue(products.Any());
-                Assert.Equals(2, products.Length);
+                Assert.IsNotNull(result);
+                Assert.IsFalse(result.HasErrors);
+                Assert.IsTrue(result.Data.Any());
+                Assert.Equals(2, result.Data.Length);
             }
         }
 

@@ -13,9 +13,11 @@ namespace Marina.Store.Web.Commands
             _db = db;
         }
 
-        public Product[] ListProducts(int categoryId, int skip = 0, int top = 25)
+        public CommandResult<Product[]> Execute(int categoryId, int skip = 0, int top = 25)
         {
-            return _db.Products.Where(p=>p.Category.Id == categoryId).OrderBy(p=>p.Id).Skip(skip).Take(top).ToArray();
+            var products = _db.Products.Where(p => p.Category.Id == categoryId).OrderBy(p => p.Id).Skip(skip).Take(top).ToArray();
+            
+            return Result(products);
         }
     }
 }
