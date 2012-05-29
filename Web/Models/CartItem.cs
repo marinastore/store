@@ -4,7 +4,7 @@ namespace Marina.Store.Web.Models
 {
     public class CartItem
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
 
         public Product Product { get; set;  }
 

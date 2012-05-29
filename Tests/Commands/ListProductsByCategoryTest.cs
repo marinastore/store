@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.ObjectModel;
+using System.Linq;
 using Marina.Store.Web.Commands;
 using Marina.Store.Web.DataAccess;
 using Marina.Store.Web.Models;
@@ -9,6 +10,16 @@ namespace Marina.Store.Tests.Commands
     [TestClass]
     public class ListProductsByCategoryTest
     {
+        [ClassInitialize]
+        public static void Init(TestContext ctx)
+        {
+            using(var db = new StoreDbContext())
+            {
+                db.Categories.Add( new Category {Name = "Флешки"} );
+                db.SaveChanges();
+            }
+        }
+
         [TestMethod]
         public void Must_list_products()
         {
@@ -17,12 +28,14 @@ namespace Marina.Store.Tests.Commands
             using(var db = new StoreDbContext())
             {
                 var cmd = new ListProductsByCategoryCommand(db);
-                var result = cmd.Execute(0);
+                var result = cmd.Execute("Флешки");
 
                 Assert.IsNotNull(result);
                 Assert.IsFalse(result.HasErrors);
-                Assert.IsTrue(result.Data.Any());
-                Assert.Equals(2, result.Data.Length);
+                Assert.IsTrue(result.Model.Any());
+                Assert.AreEqual(2, result.Model.Length);
+
+                Assert.IsTrue(result.Model.First().Params.Any());
             }
         }
 
@@ -31,9 +44,16 @@ namespace Marina.Store.Tests.Commands
             using (var db = new StoreDbContext())
             {
                 db.Products.SqlQuery("delete from products");
+                var category = db.Categories.First();
+
                 for (var i = 0; i < count; i++)
                 {
-                    db.Products.Add(new Product());
+                    var product = new Product();
+                    product.Params = new Collection<Param>();
+                    product.Category = category;
+                    product.Params.Add(new Param {Name = "Model", Value = "1"});
+                    product.Params.Add(new Param {Name = "Capacity", Value = "32gb"});
+                    db.Products.Add(product);
                 }
                 db.SaveChanges();
             }

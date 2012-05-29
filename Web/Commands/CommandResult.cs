@@ -21,6 +21,6 @@ namespace Marina.Store.Web.Commands
             get { return _errors; }
         }
 
-        public T Data { get; set; }
+        public T Model { get; set; }
     }
 }

@@ -6,12 +6,12 @@ namespace Marina.Store.Web.Commands
     {
         protected CommandResult<T> Result<T>(T data)
         {
-            return new CommandResult<T> { Data = data };
+            return new CommandResult<T> { Model = data };
         }
 
         protected CommandResult<T> Error<T>(IDictionary<string, string> errors, T data = default(T))
         {
-            var result =  new CommandResult<T> { Data = data };
+            var result =  new CommandResult<T> { Model = data };
             
             foreach (var error in errors)
             {

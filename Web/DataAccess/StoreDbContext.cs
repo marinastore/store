@@ -10,13 +10,45 @@ namespace Marina.Store.Web.DataAccess
 
         public DbSet<ShoppingCart> ShoppingCarts { get; set; }
 
+        public DbSet<Category> Categories { get; set; }
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            SetupProduct(modelBuilder);
+            SetupParam(modelBuilder);
+            SetupCartItem(modelBuilder);
+            SetupShoppingCart(modelBuilder);
+            SetupCategory(modelBuilder);
+        }
+
+        private static void SetupCategory(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Category>().HasKey(c => c.Name);
+        }
+
+        private static void SetupShoppingCart(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<ShoppingCart>().HasKey(c => c.Id);
+            modelBuilder.Entity<ShoppingCart>().HasMany(c => c.Items);
+        }
+
+        private static void SetupCartItem(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<CartItem>().HasKey(i => i.Id);
+            modelBuilder.Entity<CartItem>().HasRequired(i => i.Product);
+        }
+
+        private static void SetupParam(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Param>().HasKey(p => new { p.ProductId, p.Name });
+        }
+
+        private static void SetupProduct(DbModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Product>()
                 .HasKey(p => p.Id)
                 .Property(p => p.Id)
                 .HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
-            modelBuilder.Entity<Product>().Ignore(p=>p.Params);
         }
     }
 }
