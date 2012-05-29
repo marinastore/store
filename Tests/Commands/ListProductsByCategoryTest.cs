@@ -15,7 +15,7 @@ namespace Marina.Store.Tests.Commands
         {
             using(var db = new StoreDbContext())
             {
-                db.Categories.Add( new Category {Name = "Флешки"} );
+                db.Categories.Add( new Category {Id = 1, Name = "Флешки"} );
                 db.SaveChanges();
             }
         }
@@ -28,7 +28,7 @@ namespace Marina.Store.Tests.Commands
             using(var db = new StoreDbContext())
             {
                 var cmd = new ListProductsByCategoryCommand(db);
-                var result = cmd.Execute("Флешки");
+                var result = cmd.Execute(1);
 
                 Assert.IsNotNull(result);
                 Assert.IsFalse(result.HasErrors);

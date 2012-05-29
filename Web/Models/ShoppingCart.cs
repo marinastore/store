@@ -11,7 +11,7 @@ namespace Marina.Store.Web.Models
 
         public decimal Total
         {
-            get { return Items.Sum(l => l.Product.Price); }
+            get { return Items == null ? 0 : Items.Sum(l => l.Product.Price); }
         }
 
     }

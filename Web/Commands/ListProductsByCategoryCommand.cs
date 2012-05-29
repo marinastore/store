@@ -13,11 +13,11 @@ namespace Marina.Store.Web.Commands
             _db = db;
         }
 
-        public CommandResult<Product[]> Execute(string category, int skip = 0, int top = 25)
+        public CommandResult<Product[]> Execute(int categoryId, int skip = 0, int top = 25)
         {
             var products = _db.Products
                 .Include("Params")
-                .Where(p => p.Category.Name.Equals(category))
+                .Where(p => p.Category.Id == categoryId)
                 .OrderBy(p => p.Id)
                 .Skip(skip)
                 .Take(top)

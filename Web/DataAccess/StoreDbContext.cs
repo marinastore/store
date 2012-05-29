@@ -23,7 +23,7 @@ namespace Marina.Store.Web.DataAccess
 
         private static void SetupCategory(DbModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Category>().HasKey(c => c.Name);
+            modelBuilder.Entity<Category>().HasKey(c => c.Id);
         }
 
         private static void SetupShoppingCart(DbModelBuilder modelBuilder)
