@@ -15,8 +15,7 @@ namespace Marina.Store.Web.Commands
 
         public CommandResult<Product[]> Execute(int categoryId, int skip = 0, int top = 25)
         {
-            var products = _db.Products
-                .Include("Params")
+            var products = _db.Products.Include("Params")
                 .Where(p => p.Category.Id == categoryId)
                 .OrderBy(p => p.Id)
                 .Skip(skip)

@@ -90,6 +90,7 @@
   <ItemGroup>
     <Compile Include="Commands\Command.cs" />
     <Compile Include="Commands\CommandResult.cs" />
+    <Compile Include="Commands\GetShoppingCartCommand.cs" />
     <Compile Include="Commands\ListProductsByCategoryCommand.cs" />
     <Compile Include="Controllers\StoreController.cs" />
     <Compile Include="DataAccess\StoreDbContext.cs" />

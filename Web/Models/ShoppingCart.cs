@@ -9,9 +9,11 @@ namespace Marina.Store.Web.Models
 
         public ICollection<CartItem> Items { get; set; }
 
+        public User User { get; set; }
+
         public decimal Total
         {
-            get { return Items == null ? 0 : Items.Sum(l => l.Product.Price); }
+            get { return Items == null ? 0 : Items.Sum(l => l.Product.Price * l.Amount); }
         }
 
     }

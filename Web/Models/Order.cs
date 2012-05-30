@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Marina.Store.Web.Models
@@ -15,9 +16,11 @@ namespace Marina.Store.Web.Models
 
         public string Comment { get; set; }
 
+        public DateTime CreateDate { get; set; }
+
         public decimal Total
         {
-            get { return Lines == null ? 0 : Lines.Sum(l => l.Price); }
+            get { return Lines == null ? 0 : Lines.Sum(l => l.Price * l.Amount); }
         }
     }
 }
