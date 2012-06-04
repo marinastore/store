@@ -95,7 +95,9 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\GetShoppingCartTest.cs" />
     <Compile Include="Commands\ListProductsByCategoryTest.cs" />
+    <Compile Include="Commands\SignInTest.cs" />
     <Compile Include="InitTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

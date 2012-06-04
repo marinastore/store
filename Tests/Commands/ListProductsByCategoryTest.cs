@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 using Marina.Store.Web.Commands;
 using Marina.Store.Web.DataAccess;
@@ -7,6 +8,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Marina.Store.Tests.Commands
 {
+    // TODO: решить, хотим ли мы показывать недоступные в данный момент товары
     [TestClass]
     public class ListProductsByCategoryTest
     {
@@ -20,6 +22,9 @@ namespace Marina.Store.Tests.Commands
             }
         }
 
+        /// <summary>
+        /// Продукты возвращаются
+        /// </summary>
         [TestMethod]
         public void Must_list_products()
         {
@@ -37,6 +42,25 @@ namespace Marina.Store.Tests.Commands
 
                 Assert.IsTrue(result.Model.First().Params.Any());
             }
+        }
+
+        /// <summary>
+        /// Возвращаются продукты только для указанной категории
+        /// </summary>
+        [TestMethod]
+        public void Must_list_products_only_by_specified_category()
+        {
+            Assert.Inconclusive();
+        }
+
+        /// <summary>
+        /// Для большого кол-ва продуктов в категории
+        /// Список продуктов возвращается постранично
+        /// </summary>
+        [TestMethod]
+        public void When_there_are_lots_of_products_Must_paginate()
+        {
+            Assert.Inconclusive();
         }
 
         private static void GenerateProducts(int count)
