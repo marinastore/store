@@ -18,7 +18,7 @@ namespace Marina.Store.Tests.Commands
 
         /// <summary>
         /// Если пользовател набрал корзину до регистрации
-        /// Она удаляется из сессии (т.к. дальше будет использоваться корзина пользователя)
+        /// Она удаляется из t (т.к. дальше будет использоваться корзина пользователя)
         /// </summary>
         public void Must_delete_unsigned_session_cart_upon_register()
         {

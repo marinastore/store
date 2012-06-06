@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Marina.Store.Web.Models;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Marina.Store.Tests.Commands
 {
@@ -11,7 +12,17 @@ namespace Marina.Store.Tests.Commands
         [TestMethod]
         public void Must_return_product()
         {
-            Assert.Inconclusive();
+            var product = new Product
+                          {
+                              Name = "Флеш-память",
+                              Description = "",
+                              Category = new Category
+                                         {
+                                             Name = "Флешки"
+                                         },
+                              Price = 900,
+                              Availability = ProductAvailability.Few
+                          };
         }
     }
 }

@@ -95,10 +95,15 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\AddToShoppingCartTest.cs" />
+    <Compile Include="Commands\DeleteFromShoppingCartTest.cs" />
+    <Compile Include="Commands\GetProductTest.cs" />
     <Compile Include="Commands\GetShoppingCartTest.cs" />
     <Compile Include="Commands\ListProductsByCategoryTest.cs" />
+    <Compile Include="Commands\RegisterTest.cs" />
     <Compile Include="Commands\SignInTest.cs" />
     <Compile Include="InitTest.cs" />
+    <Compile Include="Models\ShoppingCartTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
