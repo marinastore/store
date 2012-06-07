@@ -1,5 +1,4 @@
-﻿using System.Collections.ObjectModel;
-using Marina.Store.Web.Commands;
+﻿using Marina.Store.Web.Commands;
 using Marina.Store.Web.DataAccess;
 using Marina.Store.Web.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -43,9 +42,9 @@ namespace Marina.Store.Tests.Commands
 
             using (var db = new StoreDbContext())
             {
-                db.Products.SqlQuery("delete from Products");
-                db.Products.SqlQuery("delete from Categories");
-                db.Products.SqlQuery("delete from Params");
+                db.Database.ExecuteSqlCommand("delete from Products");
+                db.Database.ExecuteSqlCommand("delete from Categories");
+                db.Database.ExecuteSqlCommand("delete from Params");
                 db.Products.Add(product);
                 db.SaveChanges();
             }

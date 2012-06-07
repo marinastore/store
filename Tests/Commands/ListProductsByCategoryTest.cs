@@ -15,7 +15,7 @@ namespace Marina.Store.Tests.Commands
         {
             using(var db = new StoreDbContext())
             {
-                db.Categories.SqlQuery("delete from Categories");
+                db.Database.ExecuteSqlCommand("delete from Categories");
                 db.Categories.Add( new Category {Id = 1, Name = "Флешки"} );
                 db.Categories.Add(new Category { Id = 2, Name = "Левая категория" });
                 db.SaveChanges();
@@ -86,7 +86,7 @@ namespace Marina.Store.Tests.Commands
         {
             using (var db = new StoreDbContext())
             {
-                db.Products.SqlQuery("delete from Products");
+                db.Database.ExecuteSqlCommand("delete from Products");
                 var categories = db.Categories.ToArray();
 
 
