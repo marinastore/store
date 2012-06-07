@@ -104,6 +104,7 @@
     <Compile Include="Models\Order.cs" />
     <Compile Include="Models\OrderLine.cs" />
     <Compile Include="Models\Param.cs" />
+    <Compile Include="Models\PartialCollection.cs" />
     <Compile Include="Models\Product.cs" />
     <Compile Include="Models\ProductAvailability.cs" />
     <Compile Include="Models\ShoppingCart.cs" />

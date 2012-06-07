@@ -13,16 +13,20 @@ namespace Marina.Store.Web.Commands
             _db = db;
         }
 
-        public CommandResult<Product[]> Execute(int categoryId, int skip = 0, int top = 25)
+        public CommandResult<PartialCollection<Product>> Execute(int categoryId, int skip = 0, int top = 25)
         {
-            var products = _db.Products.Include("Params")
-                .Where(p => p.Category.Id == categoryId)
+            var query = _db.Products.Include("Params")
+                .Where(p => p.Category.Id == categoryId);
+
+            var products = query
                 .OrderBy(p => p.Id)
                 .Skip(skip)
                 .Take(top)
                 .ToArray();
+
+            var total = query.Count();
             
-            return Result(products);
+            return Result(new PartialCollection<Product>(total, products));
         }
     }
 }

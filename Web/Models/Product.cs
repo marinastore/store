@@ -16,10 +16,13 @@ namespace Marina.Store.Web.Models
 
         public string Picture { get; set; }
 
-        public ProductAvailability Availability { get; set; }
+        public int Availability { get; set; }
 
         public ICollection<Param> Params { get; set; }
 
+        public int CategoryId { get; set; }
+
         public Category Category { get; set; }
+
     }
 }

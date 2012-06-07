@@ -27,7 +27,6 @@ namespace Marina.Store.Web.DataAccess
 
         private static void SetupUser(DbModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<User>().HasKey(u => u.Id);
             modelBuilder.Entity<User>().HasOptional(u => u.PrimaryAddress);
             modelBuilder.Entity<User>().HasOptional(u => u.SecondaryAddress);
             modelBuilder.Entity<User>().Property(u => u.Phone).IsRequired();
@@ -37,7 +36,6 @@ namespace Marina.Store.Web.DataAccess
 
         private static void SetupOrderLine(DbModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<OrderLine>().HasKey(l => l.Id);
             modelBuilder.Entity<OrderLine>().Property(l => l.ProductName).IsRequired().HasMaxLength(100);
             modelBuilder.Entity<OrderLine>().Property(l => l.Amount).IsRequired();
             modelBuilder.Entity<OrderLine>().Property(l => l.Price).IsRequired();
@@ -51,7 +49,7 @@ namespace Marina.Store.Web.DataAccess
             modelBuilder.Entity<Order>().HasRequired(o => o.Address);
             modelBuilder.Entity<Order>().Property(o => o.Comment).IsOptional().HasMaxLength(200);
             modelBuilder.Entity<Order>().Property(o => o.CreateDate).IsRequired();
-            modelBuilder.Entity<Order>().Property(o => o.Total).IsRequired();
+            modelBuilder.Entity<Order>().Ignore(o => o.Total);
             //user?
         }
 
@@ -66,7 +64,6 @@ namespace Marina.Store.Web.DataAccess
 
         private static void SetupCategory(DbModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Category>().HasKey(c => c.Id);
             modelBuilder.Entity<Category>().Property(a => a.Name).IsRequired().HasMaxLength(100);
             modelBuilder.Entity<Category>().Property(a => a.Description).IsOptional().HasMaxLength(500);
             modelBuilder.Entity<Category>().Property(a => a.Picture).IsOptional().HasMaxLength(100);
@@ -74,15 +71,13 @@ namespace Marina.Store.Web.DataAccess
 
         private static void SetupShoppingCart(DbModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<ShoppingCart>().HasKey(c => c.Id);
             modelBuilder.Entity<ShoppingCart>().HasMany(c => c.Items);
             modelBuilder.Entity<ShoppingCart>().HasOptional(c => c.User);
-            modelBuilder.Entity<ShoppingCart>().Property(c => c.Total).IsRequired();
+            modelBuilder.Entity<ShoppingCart>().Ignore(c => c.Total);
         }
 
         private static void SetupCartItem(DbModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<CartItem>().HasKey(i => i.Id);
             modelBuilder.Entity<CartItem>().HasRequired(i => i.Product);
             modelBuilder.Entity<CartItem>().Property(a => a.CreateDate).IsRequired();
             modelBuilder.Entity<CartItem>().Property(a => a.Amount).IsRequired();
@@ -104,13 +99,7 @@ namespace Marina.Store.Web.DataAccess
             modelBuilder.Entity<Product>().Property(p => p.Description).IsOptional().HasMaxLength(500);
             modelBuilder.Entity<Product>().Property(p => p.Picture).IsOptional().HasMaxLength(100);
             modelBuilder.Entity<Product>().Property(p => p.Availability).IsRequired();
-            modelBuilder.Entity<Product>().HasOptional(p => p.Params);
             modelBuilder.Entity<Product>().HasRequired(p => p.Category);
-
-            modelBuilder.Entity<Product>()
-                .HasKey(p => p.Id)
-                .Property(p => p.Id)
-                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
         }
     }
 }
