@@ -12,6 +12,8 @@ namespace Marina.Store.Web.DataAccess
 
         public DbSet<Category> Categories { get; set; }
 
+        public DbSet<User> Users { get; set; }
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             SetupProduct(modelBuilder);
@@ -29,9 +31,9 @@ namespace Marina.Store.Web.DataAccess
         {
             modelBuilder.Entity<User>().HasOptional(u => u.PrimaryAddress);
             modelBuilder.Entity<User>().HasOptional(u => u.SecondaryAddress);
-            modelBuilder.Entity<User>().Property(u => u.Phone).IsRequired();
+            modelBuilder.Entity<User>().Property(u => u.Phone).IsOptional();
             modelBuilder.Entity<User>().Property(u => u.FirstName).IsRequired().HasMaxLength(50);
-            modelBuilder.Entity<User>().Property(u => u.FirstName).IsOptional().HasMaxLength(50);
+            modelBuilder.Entity<User>().Property(u => u.LastName).IsRequired().HasMaxLength(50);
         }
 
         private static void SetupOrderLine(DbModelBuilder modelBuilder)
@@ -47,10 +49,12 @@ namespace Marina.Store.Web.DataAccess
             modelBuilder.Entity<Order>().HasKey(o => o.Id);
             modelBuilder.Entity<Order>().HasMany(o => o.Lines);
             modelBuilder.Entity<Order>().HasRequired(o => o.Address);
+            modelBuilder.Entity<Order>().Property(o => o.Phone).IsRequired();
             modelBuilder.Entity<Order>().Property(o => o.Comment).IsOptional().HasMaxLength(200);
             modelBuilder.Entity<Order>().Property(o => o.CreateDate).IsRequired();
             modelBuilder.Entity<Order>().Ignore(o => o.Total);
-            //user?
+            modelBuilder.Entity<Order>().HasOptional(o => o.User);
+           
         }
 
         private void SetupAddress(DbModelBuilder modelBuilder)

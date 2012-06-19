@@ -14,6 +14,8 @@ namespace Marina.Store.Web.Models
 
         public Address Address { get; set; }
 
+        public string Phone { get; set; }
+
         public string Comment { get; set; }
 
         public DateTime CreateDate { get; set; }
