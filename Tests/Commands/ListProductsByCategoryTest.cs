@@ -1,48 +1,36 @@
-﻿using System.Collections.ObjectModel;
-using System.Linq;
+﻿using System.Linq;
 using Marina.Store.Web.Commands;
-using Marina.Store.Web.DataAccess;
-using Marina.Store.Web.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Marina.Store.Tests.Commands
 {
     [TestClass]
-    public class ListProductsByCategoryTest
+    public class ListProductsByCategoryTest : CommandTestBase
     {
-        [ClassInitialize]
-        public static void Init(TestContext ctx)
-        {
-            using(var db = new StoreDbContext())
-            {
-                db.Database.ExecuteSqlCommand("delete from Categories");
-                db.Categories.Add( new Category {Id = 1, Name = "Флешки"} );
-                db.Categories.Add(new Category { Id = 2, Name = "Левая категория" });
-                db.SaveChanges();
-            }
-        }
-
         /// <summary>
         /// Продукты возвращаются
         /// </summary>
         [TestMethod]
         public void Must_list_products()
         {
-            GenerateProducts(2);
+            // Arrange
 
-            using(var db = new StoreDbContext())
-            {
-                var cmd = new ListProductsByCategoryCommand(db);
-                var result = cmd.Execute(1);
+            var category = CreateCategory();
+            Repeat(() => CreateProduct(category), 2);
+            Db.SaveChanges();
 
-                Assert.IsNotNull(result);
-                Assert.IsFalse(result.HasErrors);
-                Assert.IsTrue(result.Model.Any());
-                Assert.AreEqual(2, result.Model.Count);
-                Assert.IsTrue(result.Model.All( p => p.Params.Count == 2));
+            // Act
 
-                Assert.IsTrue(result.Model.First().Params.Any());
-            }
+            var cmd = new ListProductsByCategoryCommand(Db);
+            var result = cmd.Execute(category.Id);
+
+            // Assert
+
+            Assert.IsNotNull(result, "Не возвратился результат");
+            Assert.IsFalse(result.HasErrors, "Комманда выполнилась с ошибками");
+            Assert.IsTrue(result.Model.Any(), "Не возвратились продукты");
+            Assert.AreEqual(2, result.Model.Count, "Возвратились не все продукты, либо врозвратились лишние");
+            Assert.IsTrue(result.Model.All(p => p.Params.Any()), "Не возвратились параметры продуктов");
         }
 
         /// <summary>
@@ -51,14 +39,24 @@ namespace Marina.Store.Tests.Commands
         [TestMethod]
         public void Must_list_products_only_by_specified_category()
         {
-            GenerateProducts(2);
-            using (var db = new StoreDbContext())
-            {
-                var cmd = new ListProductsByCategoryCommand(db);
-                var result = cmd.Execute(1);
-                Assert.AreEqual(2, result.Model.Count);
-                Assert.IsTrue(result.Model.All(p => p.CategoryId == 1));
-            }
+            // Arrange
+
+            Repeat(() => CreateProduct(), 2);
+            var category = CreateCategory();
+            Repeat(() => CreateProduct(category), 2);
+            Db.SaveChanges();
+
+            // Act
+
+            var cmd = new ListProductsByCategoryCommand(Db);
+            var result = cmd.Execute(category.Id);
+
+            // Assert
+
+            Assert.IsNotNull(result, "Не возвратился результат");
+            Assert.IsFalse(result.HasErrors, "Комманда выполнилась с ошибками");
+            Assert.AreEqual(2, result.Model.Count, "Возвратилось неверное кол-во товаров");
+            Assert.IsTrue(result.Model.All(p => p.CategoryId == category.Id), "Возвратились товары из другой категории");
         }
 
         /// <summary>
@@ -68,56 +66,34 @@ namespace Marina.Store.Tests.Commands
         [TestMethod]
         public void When_there_are_lots_of_products_Must_paginate()
         {
-            GenerateProducts(50);
-            using (var db = new StoreDbContext())
-            {
-                var cmd = new ListProductsByCategoryCommand(db);
-                var result = cmd.Execute(1);
-                Assert.AreEqual(50, result.Model.TotalCount);
-                Assert.AreEqual(25, result.Model.Count);
+            // Arrangе
 
-                var result2 = cmd.Execute(1, 30);
-                Assert.AreEqual(50, result2.Model.TotalCount);
-                Assert.AreEqual(20, result2.Model.Count);
-            }
-        }
+            var category = CreateCategory();
+            Repeat(() => CreateProduct(category), 50);
+            Db.SaveChanges();
 
-        private static void GenerateProducts(int count)
-        {
-            using (var db = new StoreDbContext())
-            {
-                db.Database.ExecuteSqlCommand("delete from Products");
-                var categories = db.Categories.ToArray();
+            // Act
 
+            var cmd = new ListProductsByCategoryCommand(Db);
+            var result = cmd.Execute(category.Id);
 
-                for (var i = 0; i < count; i++)
-                {
-                    var product = GenerateProduct();
-                    product.Category = categories[0];
-                    db.Products.Add(product);
-                }
-                var product2 = GenerateProduct();
-                product2.Category = categories[1];
-                db.Products.Add(product2);
+            // Assert
 
-                db.SaveChanges();
-            }
-        }
+            Assert.IsNotNull(result, "Не возвратился результат");
+            Assert.IsFalse(result.HasErrors, "Комманда выполнилась с ошибками");
+            Assert.AreEqual(50, result.Model.TotalCount, "Вернулось неправильное кол-во товаров в категории");
+            Assert.AreEqual(25, result.Model.Count, "Возвратилось неправильное кол-во товаров первой страницы");
 
-        private static Product GenerateProduct()
-        {
-            var product = new Product
-            {
-                Name = "Флеш-память",
-                Description = "",
-                Vendor = "Transert",
-                Price = 900,
-                Availability = (int)ProductAvailability.Few,
-                Params = new Collection<Param>()
-            };
-            product.Params.Add(new Param { Name = "Model", Value = "1" });
-            product.Params.Add(new Param { Name = "Capacity", Value = "32gb" });
-            return product;
+            // Act 2
+
+            var result2 = cmd.Execute(category.Id, 30);
+
+            // Assert 2
+
+            Assert.IsNotNull(result, "Не возвратился результат");
+            Assert.IsFalse(result.HasErrors, "Комманда выполнилась с ошибками");
+            Assert.AreEqual(50, result.Model.TotalCount, "Вернулось неправильное кол-во товаров в категории");
+            Assert.AreEqual(25, result.Model.Count, "Возвратилось неправильное кол-во товаров второй страницы");
         }
     }
 }

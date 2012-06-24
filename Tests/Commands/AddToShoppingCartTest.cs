@@ -1,5 +1,4 @@
-﻿using Marina.Store.Web.Commands;
-using Marina.Store.Web.DataAccess;
+﻿using Marina.Store.Web.DataAccess;
 using Marina.Store.Web.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -15,9 +14,9 @@ namespace Marina.Store.Tests.Commands
         {
             using(var db = new StoreDbContext())
             {
-                db.Database.ExecuteSqlCommand("delete from Users");
-                db.Database.ExecuteSqlCommand("delete from Products");
                 db.Database.ExecuteSqlCommand("delete from ShoppingCarts");
+                db.Database.ExecuteSqlCommand("delete from Products");
+                db.Database.ExecuteSqlCommand("delete from Users");
 
                 var product = new Product
                               {

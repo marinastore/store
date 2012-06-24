@@ -1,9 +1,15 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 using Marina.Store.Web.DataAccess;
 using Marina.Store.Web.Models;
 
 namespace Marina.Store.Tests.Commands
 {
+    /// <summary>
+    /// Базовый класс для тестирования комманд.
+    /// Заботится о том, чтобы все тесты запускались с чистой базой.
+    /// Добавляет методы для генерации тестовых данных.
+    /// </summary>
     public class CommandTestBase
     {
         private readonly StoreDbContext _db;
@@ -20,6 +26,18 @@ namespace Marina.Store.Tests.Commands
 
             // Каждый тест выполняется на пустой базе данных
             CleanUpDatabase();
+        }
+
+        /// <summary>
+        /// Повторить действие N раз.
+        /// Метод добавлен для простой генерации тестовых данных
+        /// </summary>
+        public void Repeat(Action action, int times)
+        {
+            for (var i =0; i < times; i++)
+            {
+                action();
+            }
         }
 
         /// <summary>
@@ -40,11 +58,17 @@ namespace Marina.Store.Tests.Commands
 
         /// <summary>
         /// Создать тестовый продукт c двумя параметрами.
-        /// Каждый продукт создаётся в новой категории.
+        /// Если категория не задана, каждый продукт создаётся в новой.
         /// </summary>
-        public Product CreateProduct()
+        public Product CreateProduct(Category category = null)
         {
             var num = _counter++;
+
+            category = category ?? new Category
+            {
+                Name = "Тестовая категория " + num,
+                Description = "Описание тестовой категории" + num
+            };
 
             var product = new Product
             {
@@ -53,11 +77,7 @@ namespace Marina.Store.Tests.Commands
                 Vendor = "Производитель " + num,
                 Price = (decimal) (99.99 + num),
                 Availability = (int) ProductAvailability.Few,
-                Category = new Category
-                {
-                    Name = "Тестовая категория " + num,
-                    Description = "Описание тестовой категории" + num
-                },
+                Category = category,
                 Params = new[]
                 {
                     new Param
@@ -106,6 +126,23 @@ namespace Marina.Store.Tests.Commands
             Db.ShoppingCarts.Add(cart);
 
             return cart;
+        }
+
+        /// <summary>
+        /// Создать категорию
+        /// </summary>
+        public Category CreateCategory()
+        {
+            var num = _counter++;
+
+            var cat = new Category
+            {
+                Name = "Категория " + num
+            };
+
+            Db.Categories.Add(cat);
+
+            return cat;
         }
     }
 }
