@@ -110,7 +110,6 @@
     <Compile Include="Models\ProductAvailability.cs" />
     <Compile Include="Models\ShoppingCart.cs" />
     <Compile Include="Models\User.cs" />
-    <Compile Include="Models\VoidResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

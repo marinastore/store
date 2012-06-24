@@ -1,5 +1,4 @@
-﻿using System;
-using Marina.Store.Web.DataAccess;
+﻿using Marina.Store.Web.DataAccess;
 using Marina.Store.Web.Models;
 using System.Linq;
 
@@ -17,13 +16,11 @@ namespace Marina.Store.Web.Commands
             }
 
 
-            public CommandResult<VoidResult> Execute(int productId, int amount = 1)
+            public CommandResult Execute(int productId, int amount = 1)
             {
-                var result = Result(new VoidResult());
                 if (amount <= 0)
                 {
-                    result.Errors.Add("amount", "Укажите количество товара.");
-                    return result;
+                    return Fail("amount", "Укажите количество товара.");
                 }
 
                 var cart = _getCartCmd.Execute().Model;
@@ -38,7 +35,7 @@ namespace Marina.Store.Web.Commands
                 }
                 item.Amount += amount;
 
-                return result;
+                return Success();
             }
         }
 }
