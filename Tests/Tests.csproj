@@ -96,6 +96,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\AddToShoppingCartTest.cs" />
+    <Compile Include="Commands\CommandTestBase.cs" />
     <Compile Include="Commands\DeleteFromShoppingCartTest.cs" />
     <Compile Include="Commands\GetProductTest.cs" />
     <Compile Include="Commands\GetShoppingCartTest.cs" />

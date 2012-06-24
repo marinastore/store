@@ -1,60 +1,13 @@
 ﻿using System.Collections.Generic;
 using Marina.Store.Web.Commands;
-using Marina.Store.Web.DataAccess;
-using Marina.Store.Web.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
 
 namespace Marina.Store.Tests.Commands
 {
     [TestClass]
-    public class GetShoppingCartTest
+    public class GetShoppingCartTest : CommandTestBase
     {
-        public static int anonCartId;
-        public static int userCartId;
-
-        [ClassInitialize]
-        public static void Init(TestContext ctx)
-        {
-            using (var db = new StoreDbContext())
-            {
-                db.Database.ExecuteSqlCommand("delete from Users");
-                db.Database.ExecuteSqlCommand("delete from ShoppingCarts");
-                db.SaveChanges();
-            }
-
-            var user1 = new User
-            {
-                FirstName = "Вася",
-                LastName = "С корзиной"
-            };
-
-            var user2 = new User
-            {
-                FirstName = "Вася",
-                LastName = "Без корзины"
-            };
-
-            var cart = new ShoppingCart
-            {
-                User = user1
-            };
-
-            var anonCart = new ShoppingCart();
-
-            using (var db = new StoreDbContext())
-            {
-                db.Users.Add(user2);
-                db.ShoppingCarts.Add(cart);
-                db.ShoppingCarts.Add(anonCart);
-                db.SaveChanges();
-            }
-
-            anonCartId = anonCart.Id;
-            userCartId = cart.Id;
-        }
-
-
         /// <summary>
         /// Для пользователей, у которых есть корзина
         /// Возвращается существующая
@@ -62,18 +15,26 @@ namespace Marina.Store.Tests.Commands
         [TestMethod]
         public void When_there_is_cart_for_user_Must_return_existing_cart()
         {
-            using ( var db = new StoreDbContext())
-            {
-                var user = db.Users.First(u => u.LastName == "С корзиной");
-                var cmd = new GetShoppingCartCommand(db, user);
-                var result = cmd.Execute();
-                Assert.IsNotNull(result);
-                Assert.IsNotNull(result.Model);
+            // Arrange
 
-                Assert.AreEqual(1, db.ShoppingCarts.Count(c => c.User.Id == user.Id), "Если у пользователя есть корзина, новая не добавляется");
+            CreateEmptyCart();
+            var user = CreateUser();
+            var cart = CreateEmptyCart(user); // тестируемая корзина
+            CreateEmptyCart();
+            Db.SaveChanges();
 
-                Assert.AreEqual(userCartId, result.Model.Id);
-            }
+            // Act
+
+            var cmd = new GetShoppingCartCommand(Db, user);
+            var result = cmd.Execute();
+
+            // Assert
+
+            Assert.IsNotNull(result, "Не возвратился результат");
+            Assert.IsFalse(result.HasErrors, "Комманда выполнилась с ошибками");
+            Assert.IsNotNull(result.Model, "Не вернулась корзина");
+            Assert.AreEqual(1, Db.ShoppingCarts.Count(c => c.User.Id == user.Id), "Создалась новая корзина, либо уалилась старая");
+            Assert.AreEqual(cart.Id, result.Model.Id, "Вернулась чужая корзина");
         }
 
         /// <summary>
@@ -83,16 +44,24 @@ namespace Marina.Store.Tests.Commands
         [TestMethod]
         public void When_there_is_no_cart_for_user_Must_create_new()
         {
-            using (var db = new StoreDbContext())
-            {
-                var user2 = db.Users.First(u => u.LastName == "Без корзины");
-                var cmd = new GetShoppingCartCommand(db, user2);
-                var result = cmd.Execute();
-                Assert.IsNotNull(result);
-                Assert.IsNotNull(result.Model);
-                Assert.AreEqual(user2.Id, result.Model.User.Id);
-                Assert.AreEqual(1, db.ShoppingCarts.Count(c => c.User.Id == user2.Id));
-            }
+            // Arrange
+
+            CreateEmptyCart(); // просто корзина, не привязанная к пользователю
+            var user = CreateUser();
+            Db.SaveChanges();
+
+            // Act
+
+            var cmd = new GetShoppingCartCommand(Db, user);
+            var result = cmd.Execute();
+
+            // Assert
+
+            Assert.IsNotNull(result, "Не возвратился результат");
+            Assert.IsFalse(result.HasErrors, "Комманда выполнилась с ошибками");
+            Assert.IsNotNull(result.Model, "Не вернулась корзина");
+            Assert.AreEqual(user.Id, result.Model.User.Id, "Вернулась чужая корзина");
+            Assert.AreEqual(1, Db.ShoppingCarts.Count(c => c.User.Id == user.Id), "Не создалась новая корзина, либо появилась лишняя");
         }
 
 
@@ -103,17 +72,24 @@ namespace Marina.Store.Tests.Commands
         [TestMethod]
         public void When_user_is_not_signed_in_Must_return_existing_cart_for_session()
         {
-            var session = new Dictionary<string, object>();
-            session[GetShoppingCartCommand.CART_SESSION_KEY] = anonCartId;
-            using (var db = new StoreDbContext())
-            {
-                var cmd = new GetShoppingCartCommand(db, null, session);
-                var result = cmd.Execute();
-                Assert.IsNotNull(result);
-                Assert.IsNotNull(result.Model);
+            // Arrange
 
-                Assert.AreEqual(anonCartId, result.Model.Id);
-            }
+            var cart = CreateEmptyCart();
+            Db.SaveChanges();
+            var session = new Dictionary<string, object>();
+            session[GetShoppingCartCommand.CART_SESSION_KEY] = cart.Id;
+
+            // Act
+
+            var cmd = new GetShoppingCartCommand(Db, null, session);
+            var result = cmd.Execute();
+
+            // Assert
+
+            Assert.IsNotNull(result, "Не возвратился результат");
+            Assert.IsFalse(result.HasErrors, "Комманда выполнилась с ошибками");
+            Assert.IsNotNull(result.Model, "Не вернулась корзина");
+            Assert.AreEqual(cart.Id, result.Model.Id, "Вернулась чужая корзина");
         }
 
         /// <summary>
@@ -123,15 +99,21 @@ namespace Marina.Store.Tests.Commands
         [TestMethod]
         public void When_user_is_not_signed_in_and_has_no_cart_Must_return_new_cart_and_store_id_in_session()
         {
+            // Arrange
+
             var session = new Dictionary<string, object>();
-            using (var db = new StoreDbContext())
-            {
-                var cmd = new GetShoppingCartCommand(db, null, session);
-                var result = cmd.Execute();
-                Assert.IsNotNull(result);
-                Assert.IsNotNull(result.Model);
-                Assert.AreEqual(result.Model.Id, session[GetShoppingCartCommand.CART_SESSION_KEY]);
-            }
+
+            // Act
+
+            var cmd = new GetShoppingCartCommand(Db, null, session);
+            var result = cmd.Execute();
+
+            // Assert
+
+            Assert.IsNotNull(result, "Не возвратился результат");
+            Assert.IsFalse(result.HasErrors, "Комманда выполнилась с ошибками");
+            Assert.IsNotNull(result.Model, "Не вернулась корзина");
+            Assert.AreEqual(result.Model.Id, session[GetShoppingCartCommand.CART_SESSION_KEY], "Id корзины не сохранился в сессию");
         }
     }
 }
