@@ -72,7 +72,7 @@ namespace Marina.Store.Tests.Commands
 
                 Assert.AreEqual(1, db.ShoppingCarts.Count(c => c.User.Id == user.Id), "Если у пользователя есть корзина, новая не добавляется");
 
-                Assert.AreEqual(userCartId, result.Model.User.Id);
+                Assert.AreEqual(userCartId, result.Model.Id);
             }
         }
 

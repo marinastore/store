@@ -88,6 +88,7 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\AddToShoppingCartCommand.cs" />
     <Compile Include="Commands\Command.cs" />
     <Compile Include="Commands\CommandResult.cs" />
     <Compile Include="Commands\GetProductCommand.cs" />
@@ -109,6 +110,7 @@
     <Compile Include="Models\ProductAvailability.cs" />
     <Compile Include="Models\ShoppingCart.cs" />
     <Compile Include="Models\User.cs" />
+    <Compile Include="Models\VoidResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

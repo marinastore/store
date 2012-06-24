@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Data.Entity;
+﻿using System.Data.Entity;
 using Marina.Store.Web.Models;
 
 namespace Marina.Store.Web.DataAccess
@@ -83,7 +82,6 @@ namespace Marina.Store.Web.DataAccess
         private static void SetupCartItem(DbModelBuilder modelBuilder)
         {
             modelBuilder.Entity<CartItem>().HasRequired(i => i.Product);
-            modelBuilder.Entity<CartItem>().Property(a => a.CreateDate).IsRequired();
             modelBuilder.Entity<CartItem>().Property(a => a.Amount).IsRequired();
         }
 
