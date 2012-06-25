@@ -5,13 +5,13 @@ namespace Marina.Store.Web.DataAccess
 {
     public class StoreDbContext : DbContext
     {
-        public DbSet<Product> Products { get; set; }
+        public IDbSet<Product> Products { get; set; }
 
-        public DbSet<ShoppingCart> ShoppingCarts { get; set; }
+        public IDbSet<ShoppingCart> ShoppingCarts { get; set; }
 
-        public DbSet<Category> Categories { get; set; }
+        public IDbSet<Category> Categories { get; set; }
 
-        public DbSet<User> Users { get; set; }
+        public IDbSet<User> Users { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
