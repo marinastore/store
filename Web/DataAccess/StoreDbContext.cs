@@ -1,4 +1,5 @@
 ﻿using System.Data.Entity;
+using Marina.Store.Web.DataAccess.Mappings;
 using Marina.Store.Web.Models;
 
 namespace Marina.Store.Web.DataAccess
@@ -15,24 +16,19 @@ namespace Marina.Store.Web.DataAccess
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            SetupProduct(modelBuilder);
-            SetupParam(modelBuilder);
-            SetupCartItem(modelBuilder);
-            SetupShoppingCart(modelBuilder);
-            SetupCategory(modelBuilder);
-            SetupAddress(modelBuilder);
+            modelBuilder.Configurations
+                .Add(new ProductMapping())
+                .Add(new ParamMapping())
+                .Add(new CategoryMapping())
+                .Add(new AddressMapping())
+                .Add(new UserMapping())
+                .Add(new ShoppingCartMapping())
+                .Add(new CartItemMapping())
+                ;
+
+            // TODO: создать маппинги по образу и подобию остальных сущностей
             SetupOrder(modelBuilder);
             SetupOrderLine(modelBuilder);
-            SetupUser(modelBuilder);
-        }
-
-        private static void SetupUser(DbModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<User>().HasOptional(u => u.PrimaryAddress);
-            modelBuilder.Entity<User>().HasOptional(u => u.SecondaryAddress);
-            modelBuilder.Entity<User>().Property(u => u.Phone).IsOptional();
-            modelBuilder.Entity<User>().Property(u => u.FirstName).IsRequired().HasMaxLength(50);
-            modelBuilder.Entity<User>().Property(u => u.LastName).IsRequired().HasMaxLength(50);
         }
 
         private static void SetupOrderLine(DbModelBuilder modelBuilder)
@@ -54,56 +50,6 @@ namespace Marina.Store.Web.DataAccess
             modelBuilder.Entity<Order>().Ignore(o => o.Total);
             modelBuilder.Entity<Order>().HasOptional(o => o.User);
            
-        }
-
-        private void SetupAddress(DbModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<Address>().HasKey(a => a.Id);
-            modelBuilder.Entity<Address>().Property(a => a.Metro).IsOptional().HasMaxLength(30);
-            modelBuilder.Entity<Address>().Property(a => a.City).IsRequired().HasMaxLength(30);
-            modelBuilder.Entity<Address>().Property(a => a.StreetAddress).IsRequired().HasMaxLength(200);
-        }
-
-
-        private static void SetupCategory(DbModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<Category>().Property(a => a.Name).IsRequired().HasMaxLength(100);
-            modelBuilder.Entity<Category>().Property(a => a.Description).IsOptional().HasMaxLength(500);
-            modelBuilder.Entity<Category>().Property(a => a.Picture).IsOptional().HasMaxLength(100);
-        }
-
-        private static void SetupShoppingCart(DbModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<ShoppingCart>().HasMany(c => c.Items);
-            modelBuilder.Entity<ShoppingCart>().HasOptional(c => c.User);
-            modelBuilder.Entity<ShoppingCart>().Ignore(c => c.Total);
-        }
-
-        private static void SetupCartItem(DbModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<CartItem>().HasRequired(i => i.Product);
-            modelBuilder.Entity<CartItem>().Property(a => a.Amount).IsRequired();
-            modelBuilder.Entity<CartItem>().Property(a => a.Price).IsRequired();
-
-        }
-
-        private static void SetupParam(DbModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<Param>().HasKey(p => new { p.ProductId, p.Name });
-            modelBuilder.Entity<Param>().Property(p => p.ProductId).IsRequired();
-            modelBuilder.Entity<Param>().Property(p => p.Name).IsRequired().HasMaxLength(50);
-            modelBuilder.Entity<Param>().Property(p => p.Value).IsRequired().HasMaxLength(50);
-        }
-
-        private static void SetupProduct(DbModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<Product>().Property(p => p.Name).IsRequired().HasMaxLength(100);
-            modelBuilder.Entity<Product>().Property(p => p.Vendor).IsRequired().HasMaxLength(50);
-            modelBuilder.Entity<Product>().Property(p => p.Price).IsRequired();
-            modelBuilder.Entity<Product>().Property(p => p.Description).IsOptional().HasMaxLength(500);
-            modelBuilder.Entity<Product>().Property(p => p.Picture).IsOptional().HasMaxLength(100);
-            modelBuilder.Entity<Product>().Property(p => p.Availability).IsRequired();
-            modelBuilder.Entity<Product>().HasRequired(p => p.Category);
         }
     }
 }

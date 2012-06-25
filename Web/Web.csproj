@@ -95,6 +95,13 @@
     <Compile Include="Commands\GetShoppingCartCommand.cs" />
     <Compile Include="Commands\ListProductsByCategoryCommand.cs" />
     <Compile Include="Controllers\StoreController.cs" />
+    <Compile Include="DataAccess\Mappings\AddressMapping.cs" />
+    <Compile Include="DataAccess\Mappings\CartItemMapping.cs" />
+    <Compile Include="DataAccess\Mappings\CategoryMapping.cs" />
+    <Compile Include="DataAccess\Mappings\ParamMapping.cs" />
+    <Compile Include="DataAccess\Mappings\ProductMapping.cs" />
+    <Compile Include="DataAccess\Mappings\ShoppingCartMapping.cs" />
+    <Compile Include="DataAccess\Mappings\UserMapping.cs" />
     <Compile Include="DataAccess\StoreDbContext.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
