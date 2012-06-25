@@ -90,10 +90,10 @@ namespace Marina.Store.Tests.Commands
 
             // Assert 2
 
-            Assert.IsNotNull(result, "Не возвратился результат");
-            Assert.IsFalse(result.HasErrors, "Комманда выполнилась с ошибками");
-            Assert.AreEqual(50, result.Model.TotalCount, "Вернулось неправильное кол-во товаров в категории");
-            Assert.AreEqual(25, result.Model.Count, "Возвратилось неправильное кол-во товаров второй страницы");
+            Assert.IsNotNull(result2, "Не возвратился результат");
+            Assert.IsFalse(result2.HasErrors, "Комманда выполнилась с ошибками");
+            Assert.AreEqual(50, result2.Model.TotalCount, "Вернулось неправильное кол-во товаров в категории");
+            Assert.AreEqual(20, result2.Model.Count, "Возвратилось неправильное кол-во товаров второй страницы");
         }
     }
 }

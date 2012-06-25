@@ -83,6 +83,8 @@ namespace Marina.Store.Web.DataAccess
         {
             modelBuilder.Entity<CartItem>().HasRequired(i => i.Product);
             modelBuilder.Entity<CartItem>().Property(a => a.Amount).IsRequired();
+            modelBuilder.Entity<CartItem>().Property(a => a.Price).IsRequired();
+
         }
 
         private static void SetupParam(DbModelBuilder modelBuilder)

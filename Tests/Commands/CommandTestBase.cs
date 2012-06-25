@@ -64,11 +64,7 @@ namespace Marina.Store.Tests.Commands
         {
             var num = _counter++;
 
-            category = category ?? new Category
-            {
-                Name = "Тестовая категория " + num,
-                Description = "Описание тестовой категории" + num
-            };
+            category = category ?? CreateCategory();
 
             var product = new Product
             {
@@ -107,7 +103,7 @@ namespace Marina.Store.Tests.Commands
 
             var user = new User
             {
-                FirstName = "Пользователь",
+                FirstName = "Пользователь" + num,
                 LastName = num.ToString(CultureInfo.InvariantCulture)
             };
 

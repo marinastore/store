@@ -11,5 +11,7 @@ namespace Marina.Store.Web.Models
         public Product Product { get; set;  }
 
         public int Amount { get; set; }
+
+        public decimal Price { get; set; }
     }
 }

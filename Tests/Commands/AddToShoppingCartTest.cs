@@ -1,60 +1,40 @@
-﻿using Marina.Store.Web.DataAccess;
-using Marina.Store.Web.Models;
+﻿using System.Linq;
+using Marina.Store.Web.Commands;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Marina.Store.Tests.Commands
 {
     [TestClass]
-    public class AddToShoppingCartTest
+    public class AddToShoppingCartTest : CommandTestBase
     {
-        public static int productId;
-
-        [ClassInitialize]
-        public static void Init(TestContext ctx)
-        {
-            using(var db = new StoreDbContext())
-            {
-                db.Database.ExecuteSqlCommand("delete from ShoppingCarts");
-                db.Database.ExecuteSqlCommand("delete from Products");
-                db.Database.ExecuteSqlCommand("delete from Users");
-
-                var product = new Product
-                              {
-                                  Name = "Флеш",
-                                  Vendor = "Россия",
-                                  Price = 100,
-                                  Availability = (int) ProductAvailability.Few,
-                                  Category = new Category
-                                             {
-                                                 Name = "Флеш-носители" 
-                                             }
-                              };
-                var user = new User
-                           {
-                               FirstName = "Вася",
-                               LastName = "Обломов"
-                           };
-
-                db.Products.Add(product);
-                db.Users.Add(user);
-                db.SaveChanges();
-
-                productId = product.Id;
-            }            
-        }
-
         /// <summary>
         /// Товар добавляется в корзину
         /// </summary>
         [TestMethod]
         public void Must_add_to_cart()
         {
-            Assert.Inconclusive();
-            using (var db = new StoreDbContext())
-            {
-              /*  var cmd = new AddToShoppingCartCommand(db);
-                cmd.Execute(productId, 2);*/
-            }
+            // Arrange
+
+            var user = CreateUser();
+            CreateEmptyCart(user);
+            CreateProduct();
+            var product = CreateProduct(); // тестируемый продукт
+            CreateProduct();
+            Db.SaveChanges();
+
+            // Act
+
+            var getCartCmd = new GetShoppingCartCommand(Db, user);
+            var cmd = new AddToShoppingCartCommand(Db, getCartCmd);
+            var result = cmd.Execute(product.Id);
+
+            // Assert
+
+            Assert.IsNotNull(result, "Не возвратился результат");
+            Assert.IsFalse(result.HasErrors, "Комманда выполнилась с ошибками");
+            var cartResult = getCartCmd.Execute();
+            Assert.AreEqual(1, cartResult.Model.Items.Count, "Товар не добавился в корзину"); 
+            Assert.AreEqual(product.Id, cartResult.Model.Items.First().ProductId, "Добавился не тот продукт");
         }
 
         /// <summary>
@@ -64,7 +44,27 @@ namespace Marina.Store.Tests.Commands
         [TestMethod]
         public void When_given_product_found_in_the_cart_Must_increment_amount()
         {
-            Assert.Inconclusive();
+            // Arrange
+
+            var user = CreateUser();
+            CreateEmptyCart(user);
+            var product = CreateProduct();
+            Db.SaveChanges();
+
+            // Act
+
+            var getCartCmd = new GetShoppingCartCommand(Db, user);
+            var cmd = new AddToShoppingCartCommand(Db, getCartCmd);
+            cmd.Execute(product.Id);
+            var result = cmd.Execute(product.Id, 2);
+
+            // Assert
+
+            Assert.IsNotNull(result, "Не возвратился результат");
+            Assert.IsFalse(result.HasErrors, "Комманда выполнилась с ошибками");
+            var cartResult = getCartCmd.Execute();
+            Assert.AreEqual(1, cartResult.Model.Items.Count, "Добавился новый товар");
+            Assert.AreEqual(3, cartResult.Model.Items.First().Amount, "Количество товара не увеличилось");
         }
     }
 }
