@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Marina.Store.Web.DataAccess;
 using Marina.Store.Web.Models;
+using System.Data.Entity;
 
 namespace Marina.Store.Web.Commands
 {
@@ -15,7 +16,7 @@ namespace Marina.Store.Web.Commands
 
         public CommandResult<PartialCollection<Product>> Execute(int categoryId, int skip = 0, int top = 25)
         {
-            var query = _db.Products.Include("Params")
+            var query = _db.Products.Include(p=>p.Params)
                 .Where(p => p.Category.Id == categoryId);
 
             var products = query

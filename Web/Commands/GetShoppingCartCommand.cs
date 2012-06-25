@@ -2,6 +2,7 @@
 using System.Linq;
 using Marina.Store.Web.DataAccess;
 using Marina.Store.Web.Models;
+using System.Data.Entity;
 
 namespace Marina.Store.Web.Commands
 {
@@ -36,7 +37,7 @@ namespace Marina.Store.Web.Commands
             }
             else
             {
-                cart = _db.ShoppingCarts.Include("Items").FirstOrDefault(c => c.User.Id == _user.Id);
+                cart = _db.ShoppingCarts.Include(c=>c.Items).FirstOrDefault(c => c.User.Id == _user.Id);
                 if (cart == null)
                 {
                     cart = CreateNewCart(_user);
