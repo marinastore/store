@@ -98,6 +98,8 @@
     <Compile Include="DataAccess\Mappings\AddressMapping.cs" />
     <Compile Include="DataAccess\Mappings\CartItemMapping.cs" />
     <Compile Include="DataAccess\Mappings\CategoryMapping.cs" />
+    <Compile Include="DataAccess\Mappings\OrderLineMapping.cs" />
+    <Compile Include="DataAccess\Mappings\OrderMapping.cs" />
     <Compile Include="DataAccess\Mappings\ParamMapping.cs" />
     <Compile Include="DataAccess\Mappings\ProductMapping.cs" />
     <Compile Include="DataAccess\Mappings\ShoppingCartMapping.cs" />

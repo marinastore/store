@@ -20,7 +20,7 @@ namespace Marina.Store.Web.Commands
             _session = session;
         }
 
-        public CommandResult<ShoppingCart> Execute()
+        public virtual CommandResult<ShoppingCart> Execute()
         {
             ShoppingCart cart;
             if (_user == null)

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Globalization;
 using Marina.Store.Web.DataAccess;
 using Marina.Store.Web.Models;
@@ -117,7 +118,11 @@ namespace Marina.Store.Tests.Commands
         /// </summary>
         public ShoppingCart CreateEmptyCart(User user = null)
         {
-            var cart = new ShoppingCart { User = user };
+            var cart = new ShoppingCart
+            {
+                User = user,
+                Items = new Collection<CartItem>()
+            };
 
             Db.ShoppingCarts.Add(cart);
 

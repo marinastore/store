@@ -24,32 +24,9 @@ namespace Marina.Store.Web.DataAccess
                 .Add(new UserMapping())
                 .Add(new ShoppingCartMapping())
                 .Add(new CartItemMapping())
+                .Add(new OrderMapping())
+                .Add(new OrderLineMapping())
                 ;
-
-            // TODO: создать маппинги по образу и подобию остальных сущностей
-            SetupOrder(modelBuilder);
-            SetupOrderLine(modelBuilder);
-        }
-
-        private static void SetupOrderLine(DbModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<OrderLine>().Property(l => l.ProductName).IsRequired().HasMaxLength(100);
-            modelBuilder.Entity<OrderLine>().Property(l => l.Amount).IsRequired();
-            modelBuilder.Entity<OrderLine>().Property(l => l.Price).IsRequired();
-            modelBuilder.Entity<OrderLine>().HasRequired(l => l.Product);
-        }
-
-        private static void SetupOrder(DbModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<Order>().HasKey(o => o.Id);
-            modelBuilder.Entity<Order>().HasMany(o => o.Lines);
-            modelBuilder.Entity<Order>().HasRequired(o => o.Address);
-            modelBuilder.Entity<Order>().Property(o => o.Phone).IsRequired();
-            modelBuilder.Entity<Order>().Property(o => o.Comment).IsOptional().HasMaxLength(200);
-            modelBuilder.Entity<Order>().Property(o => o.CreateDate).IsRequired();
-            modelBuilder.Entity<Order>().Ignore(o => o.Total);
-            modelBuilder.Entity<Order>().HasOptional(o => o.User);
-           
         }
     }
 }

@@ -6,12 +6,10 @@ namespace Marina.Store.Web.Commands
 {
     public class AddToShoppingCartCommand : Command
         {
-            private readonly StoreDbContext _db;
             private readonly GetShoppingCartCommand _getCartCmd;
 
-            public AddToShoppingCartCommand(StoreDbContext db, GetShoppingCartCommand getCartCmd)
+            public AddToShoppingCartCommand(GetShoppingCartCommand getCartCmd)
             {
-                _db = db;
                 _getCartCmd = getCartCmd;
             }
 
