@@ -13,7 +13,7 @@ namespace Marina.Store.Tests.Commands
         private Mock<GetShoppingCartCommand> _getCartMoq;
 
         /// <summary>
-        /// Подделываем комманду получения корзины
+        /// Подделываем комманду получения корзины перед каждым тестом
         /// </summary>
         [TestInitialize]
         public void Init()
@@ -58,12 +58,11 @@ namespace Marina.Store.Tests.Commands
         {
             // Arrange
 
-            var user = CreateUser();
-            CreateEmptyCart(user);
             var product = CreateProduct();
             Db.SaveChanges();
 
             // Act
+
             var cmd = new AddToShoppingCartCommand(_getCartMoq.Object);
             cmd.Execute(product.Id);
             var result = cmd.Execute(product.Id, 2);

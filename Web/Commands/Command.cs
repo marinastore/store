@@ -42,7 +42,7 @@ namespace Marina.Store.Web.Commands
         /// <summary>
         /// Вернуть ошибки
         /// </summary>
-        protected CommandResult<T> Fail<T>(Dictionary<string, string> errors)
+        protected CommandResult<T> Fail<T>(IDictionary<string, string> errors)
         {
             return new CommandResult<T>(errors);
         }
@@ -50,7 +50,7 @@ namespace Marina.Store.Web.Commands
         /// <summary>
         /// Вернуть ошибки
         /// </summary>
-        protected CommandResult Fail(Dictionary<string, string> errors)
+        protected CommandResult Fail(IDictionary<string, string> errors)
         {
             return new CommandResult(errors);
         }

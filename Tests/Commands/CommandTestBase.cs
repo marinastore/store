@@ -55,6 +55,7 @@ namespace Marina.Store.Tests.Commands
             _db.Database.ExecuteSqlCommand("delete from Products");
             _db.Database.ExecuteSqlCommand("delete from Categories");
             _db.Database.ExecuteSqlCommand("delete from Users");
+            _db.Database.ExecuteSqlCommand("delete from RegistrationRequests");
         }
 
         /// <summary>

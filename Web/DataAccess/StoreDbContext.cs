@@ -14,6 +14,8 @@ namespace Marina.Store.Web.DataAccess
 
         public IDbSet<User> Users { get; set; }
 
+        public IDbSet<RegistrationRequest> RegistrationRequests { get; set; } 
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Configurations
@@ -26,6 +28,7 @@ namespace Marina.Store.Web.DataAccess
                 .Add(new CartItemMapping())
                 .Add(new OrderMapping())
                 .Add(new OrderLineMapping())
+                .Add(new RegistrationRequestMapping())
                 ;
         }
     }

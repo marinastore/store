@@ -91,6 +91,7 @@
     <Compile Include="Commands\AddToShoppingCartCommand.cs" />
     <Compile Include="Commands\Command.cs" />
     <Compile Include="Commands\CommandResult.cs" />
+    <Compile Include="Commands\CreateRegistrationRequestCommand.cs" />
     <Compile Include="Commands\GetProductCommand.cs" />
     <Compile Include="Commands\GetShoppingCartCommand.cs" />
     <Compile Include="Commands\ListProductsByCategoryCommand.cs" />
@@ -102,12 +103,14 @@
     <Compile Include="DataAccess\Mappings\OrderMapping.cs" />
     <Compile Include="DataAccess\Mappings\ParamMapping.cs" />
     <Compile Include="DataAccess\Mappings\ProductMapping.cs" />
+    <Compile Include="DataAccess\Mappings\RegistrationRequestMapping.cs" />
     <Compile Include="DataAccess\Mappings\ShoppingCartMapping.cs" />
     <Compile Include="DataAccess\Mappings\UserMapping.cs" />
     <Compile Include="DataAccess\StoreDbContext.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="MailService\IMailService.cs" />
     <Compile Include="Models\Address.cs" />
     <Compile Include="Models\CartItem.cs" />
     <Compile Include="Models\Category.cs" />
@@ -117,6 +120,7 @@
     <Compile Include="Models\PartialCollection.cs" />
     <Compile Include="Models\Product.cs" />
     <Compile Include="Models\ProductAvailability.cs" />
+    <Compile Include="Models\RegistrationRequest.cs" />
     <Compile Include="Models\ShoppingCart.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
