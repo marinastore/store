@@ -5,6 +5,7 @@ using System.Linq;
 
 namespace Marina.Store.Tests.Commands
 {
+    // TODO:  прверить на прчность -- разрешить возвращать null
     [TestClass]
     public class GetShoppingCartTest : CommandTestBase
     {
@@ -17,10 +18,10 @@ namespace Marina.Store.Tests.Commands
         {
             // Arrange
 
-            CreateEmptyCart();
+            CreateCart();
             var user = CreateUser();
-            var cart = CreateEmptyCart(user); // тестируемая корзина
-            CreateEmptyCart();
+            var cart = CreateCart(user); // тестируемая корзина
+            CreateCart();
             Db.SaveChanges();
 
             // Act
@@ -30,10 +31,9 @@ namespace Marina.Store.Tests.Commands
 
             // Assert
 
-            Assert.IsNotNull(result, "Не возвратился результат");
-            Assert.IsFalse(result.HasErrors, "Комманда выполнилась с ошибками");
+            AssertCommandSuccess(result);
             Assert.IsNotNull(result.Model, "Не вернулась корзина");
-            Assert.AreEqual(1, Db.ShoppingCarts.Count(c => c.User.Id == user.Id), "Создалась новая корзина, либо уалилась старая");
+            Assert.AreEqual(1, Db.ShoppingCarts.Count(c => c.User.Id == user.Id), "Создалась новая корзина, либо удалилась старая");
             Assert.AreEqual(cart.Id, result.Model.Id, "Вернулась чужая корзина");
         }
 
@@ -46,7 +46,7 @@ namespace Marina.Store.Tests.Commands
         {
             // Arrange
 
-            CreateEmptyCart(); // просто корзина, не привязанная к пользователю
+            CreateCart(); // просто корзина, не привязанная к пользователю
             var user = CreateUser();
             Db.SaveChanges();
 
@@ -57,8 +57,7 @@ namespace Marina.Store.Tests.Commands
 
             // Assert
 
-            Assert.IsNotNull(result, "Не возвратился результат");
-            Assert.IsFalse(result.HasErrors, "Комманда выполнилась с ошибками");
+            AssertCommandSuccess(result);
             Assert.IsNotNull(result.Model, "Не вернулась корзина");
             Assert.AreEqual(user.Id, result.Model.User.Id, "Вернулась чужая корзина");
             Assert.AreEqual(1, Db.ShoppingCarts.Count(c => c.User.Id == user.Id), "Не создалась новая корзина, либо появилась лишняя");
@@ -74,7 +73,7 @@ namespace Marina.Store.Tests.Commands
         {
             // Arrange
 
-            var cart = CreateEmptyCart();
+            var cart = CreateCart();
             Db.SaveChanges();
             var session = new Dictionary<string, object>();
             session[GetShoppingCartCommand.CART_SESSION_KEY] = cart.Id;
@@ -86,8 +85,7 @@ namespace Marina.Store.Tests.Commands
 
             // Assert
 
-            Assert.IsNotNull(result, "Не возвратился результат");
-            Assert.IsFalse(result.HasErrors, "Комманда выполнилась с ошибками");
+            AssertCommandSuccess(result);
             Assert.IsNotNull(result.Model, "Не вернулась корзина");
             Assert.AreEqual(cart.Id, result.Model.Id, "Вернулась чужая корзина");
         }
@@ -110,8 +108,7 @@ namespace Marina.Store.Tests.Commands
 
             // Assert
 
-            Assert.IsNotNull(result, "Не возвратился результат");
-            Assert.IsFalse(result.HasErrors, "Комманда выполнилась с ошибками");
+            AssertCommandSuccess(result);
             Assert.IsNotNull(result.Model, "Не вернулась корзина");
             Assert.AreEqual(result.Model.Id, session[GetShoppingCartCommand.CART_SESSION_KEY], "Id корзины не сохранился в сессию");
         }

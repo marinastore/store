@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Globalization;
+using Marina.Store.Web.Commands;
 using Marina.Store.Web.DataAccess;
+using Marina.Store.Web.MailService;
 using Marina.Store.Web.Models;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 
 namespace Marina.Store.Tests.Commands
 {
@@ -40,6 +44,32 @@ namespace Marina.Store.Tests.Commands
                 action();
             }
         }
+
+
+        #region Asserts
+
+        /// <summary>
+        /// Проверить, что комманда успешно выполнена
+        /// </summary>
+        public void AssertCommandError(CommandResult result, string hasErrorsMessage = "Комманда выполнилась без ошибок")
+        {
+            Assert.IsNotNull(result, "Не возвратился результат");
+            Assert.IsTrue(result.HasErrors, hasErrorsMessage);
+        }
+
+        /// <summary>
+        /// Проверить, что комманда выполнена с ошибками
+        /// </summary>
+        public void AssertCommandSuccess(CommandResult result)
+        {
+            Assert.IsNotNull(result, "Не возвратился результат");
+            Assert.IsFalse(result.HasErrors, "Комманда выполнилась с ошибками");
+        }
+
+        #endregion
+
+
+        #region Генерация тестовых данных
 
         /// <summary>
         /// Удалить все данные из базы
@@ -117,7 +147,7 @@ namespace Marina.Store.Tests.Commands
         /// <summary>
         /// Создать пустую корзину
         /// </summary>
-        public ShoppingCart CreateEmptyCart(User user = null)
+        public ShoppingCart CreateCart(User user = null, params CartItem[] items)
         {
             var cart = new ShoppingCart
             {
@@ -128,6 +158,23 @@ namespace Marina.Store.Tests.Commands
             Db.ShoppingCarts.Add(cart);
 
             return cart;
+        }
+
+        /// <summary>
+        /// Создать покупку
+        /// </summary>
+        /// <returns></returns>
+        public CartItem CreateCartItem(Product product = null, int amount = 1)
+        {
+            product = product ?? CreateProduct();
+
+            var item = new CartItem
+            {
+                Amount = 1,
+                Price = product.Price,
+                Product = product
+            };
+            return item;
         }
 
         /// <summary>
@@ -146,5 +193,53 @@ namespace Marina.Store.Tests.Commands
 
             return cat;
         }
+
+        /// <summary>
+        /// Создать заявку на регистрацию
+        /// </summary>
+        public RegistrationRequest CreateRegistrationRequest(ShoppingCart cart = null)
+        {
+            var request = new RegistrationRequest
+            {
+                Id = Guid.NewGuid(),
+                Email = string.Format("{0}@mail.ru", Guid.NewGuid().ToString("N")),
+                Cart = cart
+            };
+            
+            Db.RegistrationRequests.Add(request);
+
+            return request;
+
+        }
+
+        #endregion
+
+
+        #region Моки сервисов
+
+        /// <summary>
+        /// Создать mock сервиса отправки сообщений
+        /// </summary>
+        /// <returns></returns>
+        public Mock<IMailService> MoqMailService()
+        {
+            var moq = new Mock<IMailService>();
+            return moq;
+        }
+
+        /// <summary>
+        /// Создать mock комманд получения корзины
+        /// </summary>
+        public Mock<GetShoppingCartCommand> MoqGetShoppingCart(ShoppingCart cart = null)
+        {
+            cart = cart ?? CreateCart();
+
+            var moq = new Mock<GetShoppingCartCommand>(null, null, null);
+            moq.Setup(c => c.Execute()).Returns(new CommandResult<ShoppingCart>(cart));
+
+            return moq;
+        }
+
+        #endregion
     }
 }

@@ -91,7 +91,8 @@
     <Compile Include="Commands\AddToShoppingCartCommand.cs" />
     <Compile Include="Commands\Command.cs" />
     <Compile Include="Commands\CommandResult.cs" />
-    <Compile Include="Commands\CreateRegistrationRequestCommand.cs" />
+    <Compile Include="Commands\AddRegistrationRequestCommand.cs" />
+    <Compile Include="Commands\FulfillRegistrationRequestCommand.cs" />
     <Compile Include="Commands\GetProductCommand.cs" />
     <Compile Include="Commands\GetShoppingCartCommand.cs" />
     <Compile Include="Commands\ListProductsByCategoryCommand.cs" />

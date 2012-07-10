@@ -26,8 +26,7 @@ namespace Marina.Store.Tests.Commands
 
             // Assert
 
-            Assert.IsNotNull(result, "Не возвратился результат");
-            Assert.IsFalse(result.HasErrors, "Комманда выполнилась с ошибками");
+            AssertCommandSuccess(result);
             Assert.IsTrue(result.Model.Any(), "Не возвратились продукты");
             Assert.AreEqual(2, result.Model.Count, "Возвратились не все продукты, либо врозвратились лишние");
             Assert.IsTrue(result.Model.All(p => p.Params.Any()), "Не возвратились параметры продуктов");
@@ -53,8 +52,7 @@ namespace Marina.Store.Tests.Commands
 
             // Assert
 
-            Assert.IsNotNull(result, "Не возвратился результат");
-            Assert.IsFalse(result.HasErrors, "Комманда выполнилась с ошибками");
+            AssertCommandSuccess(result);
             Assert.AreEqual(2, result.Model.Count, "Возвратилось неверное кол-во товаров");
             Assert.IsTrue(result.Model.All(p => p.CategoryId == category.Id), "Возвратились товары из другой категории");
         }
@@ -79,8 +77,7 @@ namespace Marina.Store.Tests.Commands
 
             // Assert
 
-            Assert.IsNotNull(result, "Не возвратился результат");
-            Assert.IsFalse(result.HasErrors, "Комманда выполнилась с ошибками");
+            AssertCommandSuccess(result);
             Assert.AreEqual(50, result.Model.TotalCount, "Вернулось неправильное кол-во товаров в категории");
             Assert.AreEqual(25, result.Model.Count, "Возвратилось неправильное кол-во товаров первой страницы");
 
@@ -90,8 +87,7 @@ namespace Marina.Store.Tests.Commands
 
             // Assert 2
 
-            Assert.IsNotNull(result2, "Не возвратился результат");
-            Assert.IsFalse(result2.HasErrors, "Комманда выполнилась с ошибками");
+            AssertCommandSuccess(result2);
             Assert.AreEqual(50, result2.Model.TotalCount, "Вернулось неправильное кол-во товаров в категории");
             Assert.AreEqual(20, result2.Model.Count, "Возвратилось неправильное кол-во товаров второй страницы");
         }

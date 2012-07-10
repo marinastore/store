@@ -26,8 +26,7 @@ namespace Marina.Store.Tests.Commands
 
             // Assert
 
-            Assert.IsNotNull(result, "Не возвратился результат");
-            Assert.IsFalse(result.HasErrors, "Комманда выполнилась с ошибками");
+            AssertCommandSuccess(result);
             Assert.AreEqual(product.Id, result.Model.Id, "Возвратился продукт с неверным Id");
             Assert.IsNotNull(result.Model.Category, "Продукт вернулся без категории");
             Assert.AreEqual(product.Name, result.Model.Name, "Неверное имя продукта");
