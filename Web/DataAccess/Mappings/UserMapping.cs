@@ -7,9 +7,11 @@ namespace Marina.Store.Web.DataAccess.Mappings
     {
         public UserMapping()
         {
+            Property(u => u.Email).IsRequired();
+            Property(u => u.PasswordHash).IsRequired();
             Property(u => u.Phone).IsOptional();
-            Property(u => u.FirstName).IsRequired().HasMaxLength(50);
-            Property(u => u.LastName).IsRequired().HasMaxLength(50);
+            Property(u => u.FirstName).IsOptional().HasMaxLength(50);
+            Property(u => u.LastName).IsOptional().HasMaxLength(50);
             HasOptional(u => u.PrimaryAddress);
             HasOptional(u => u.SecondaryAddress);
         }

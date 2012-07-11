@@ -145,7 +145,7 @@ namespace Marina.Store.Tests.Commands
         }
 
         /// <summary>
-        /// Создать пустую корзину
+        /// Создать корзину
         /// </summary>
         public ShoppingCart CreateCart(User user = null, params CartItem[] items)
         {
@@ -154,6 +154,14 @@ namespace Marina.Store.Tests.Commands
                 User = user,
                 Items = new Collection<CartItem>()
             };
+
+            if (items != null)
+            {
+                foreach (var cartItem in items)
+                {
+                    cart.Items.Add(cartItem);
+                }
+            }
 
             Db.ShoppingCarts.Add(cart);
 

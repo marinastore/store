@@ -10,6 +10,6 @@ namespace Marina.Store.Web.Models
 
         public ShoppingCart Cart { get; set; }
 
-        public int ShoppingCartId { get; set; }
+        public int? ShoppingCartId { get; set; }
     }
 }

@@ -8,7 +8,7 @@ namespace Marina.Store.Web.DataAccess.Mappings
         public RegistrationRequestMapping()
         {
             Property(r => r.Email).IsRequired();
-            HasRequired(r => r.Cart);
+            HasOptional(r => r.Cart);
         }
     }
 }

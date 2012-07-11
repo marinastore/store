@@ -49,10 +49,12 @@ namespace Marina.Store.Tests.Commands
         {
             // Arrange
 
+            const string email = "not valid email";
+
             // Act
 
             var cmd = new AddRegistrationRequestCommand(Db, MoqGetShoppingCart().Object, MoqMailService().Object);
-            var result = cmd.Execute("not valid email");
+            var result = cmd.Execute(email);
 
             // Assert
             
@@ -111,8 +113,7 @@ namespace Marina.Store.Tests.Commands
             // Arrange 2 (пустая корзина)
 
             var email2 = RandomEmail();
-            var emptyCart = CreateCart();
-            var getCartMoq2 = MoqGetShoppingCart(emptyCart);
+            var getCartMoq2 = MoqGetShoppingCart();
             Db.SaveChanges();
 
             // Act 2 (пустая корзина)
@@ -124,7 +125,7 @@ namespace Marina.Store.Tests.Commands
             // Assert 2 (пустая корзина)
 
             AssertCommandSuccess(result2);
-            Assert.IsTrue(Db.RegistrationRequests.Any(r => r.Email == email2 && r.ShoppingCartId != nonEmptyCart.Id), "Создалась ссылка на пустую корзину");
+            Assert.IsTrue(Db.RegistrationRequests.Any(r => r.Email == email2 && r.ShoppingCartId == null), "Создалась ссылка на пустую корзину");
         }
 
         /// <summary>

@@ -16,6 +16,7 @@ namespace Marina.Store.Tests.Commands
     {
         private const string PASSWORD = "qwerty";
 
+
         /// <summary>
         /// При регистрации создается новый пользователь
         /// </summary>
@@ -29,7 +30,7 @@ namespace Marina.Store.Tests.Commands
 
             // Act
 
-            var cmd = new FulfillRegistrationRequestCommand();
+            var cmd = new FulfillRegistrationRequestCommand(Db, MoqGetShoppingCart().Object);
             var result = cmd.Execute(request.Id, PASSWORD);
             Db.SaveChanges();
 
@@ -42,6 +43,7 @@ namespace Marina.Store.Tests.Commands
         /// <summary>
         /// Пароль проверяется по формату
         /// </summary>
+        [TestMethod]
         public void Must_validate_password()
         {
             // Arrange
@@ -50,7 +52,7 @@ namespace Marina.Store.Tests.Commands
 
             // Act
 
-            var cmd = new FulfillRegistrationRequestCommand();
+            var cmd = new FulfillRegistrationRequestCommand(Db, MoqGetShoppingCart().Object);
             var result = cmd.Execute(requestId, "1");
 
             // Assert
@@ -62,6 +64,7 @@ namespace Marina.Store.Tests.Commands
         /// <summary>
         /// С новым пользователем сохраняется хэш от его пароля
         /// </summary>
+        [TestMethod]
         public void Must_store_password_hash_with_user()
         {
             // Arrange
@@ -71,7 +74,7 @@ namespace Marina.Store.Tests.Commands
 
             // Act
 
-            var cmd = new FulfillRegistrationRequestCommand();
+            var cmd = new FulfillRegistrationRequestCommand(Db, MoqGetShoppingCart().Object);
             var result = cmd.Execute(request.Id, PASSWORD);
             Db.SaveChanges();
 
@@ -99,7 +102,7 @@ namespace Marina.Store.Tests.Commands
 
             // Act
 
-            var cmd = new FulfillRegistrationRequestCommand();
+            var cmd = new FulfillRegistrationRequestCommand(Db, MoqGetShoppingCart().Object);
             var result = cmd.Execute(request.Id, PASSWORD);
 
             // Assert 
@@ -123,7 +126,7 @@ namespace Marina.Store.Tests.Commands
 
             // Act
 
-            var cmd = new FulfillRegistrationRequestCommand();
+            var cmd = new FulfillRegistrationRequestCommand(Db, MoqGetShoppingCart().Object);
             var result = cmd.Execute(request.Id, PASSWORD);
             Db.SaveChanges();
 
