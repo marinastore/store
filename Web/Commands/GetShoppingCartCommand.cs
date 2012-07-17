@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Marina.Store.Web.DataAccess;
+using Marina.Store.Web.Infrastructure.Commands;
 using Marina.Store.Web.Models;
 using System.Data.Entity;
 
@@ -20,33 +21,26 @@ namespace Marina.Store.Web.Commands
             _session = session;
         }
 
-        public virtual CommandResult<ShoppingCart> Execute()
+        public virtual Result<ShoppingCart> Execute()
         {
-            ShoppingCart cart;
             if (_user == null)
             {
-                if (_session.ContainsKey(CART_SESSION_KEY))
-                {
-                    var id = _session[CART_SESSION_KEY] as int?;
-                    cart = _db.ShoppingCarts.FirstOrDefault(c => c.Id == id);
-                }
-                else
-                {
-                    cart = CreateNewCart(_session);
-                }
+                return GetSessionCart() ?? CreateSessionCart(_session);
             }
-            else
-            {
-                cart = _db.ShoppingCarts.Include(c=>c.Items).FirstOrDefault(c => c.User.Id == _user.Id);
-                if (cart == null)
-                {
-                    cart = CreateNewCart(_user);
-                }
-            }
-            return Result(cart);
+
+            return GetUserCart() ?? CreateUserCart(_user);
         }
 
-        private ShoppingCart CreateNewCart(User user)
+        #region Private helpers
+
+        private ShoppingCart GetUserCart()
+        {
+            return _db.ShoppingCarts
+                .Include(c => c.Items)
+                .FirstOrDefault(c => c.User.Id == _user.Id);
+        }
+
+        private ShoppingCart CreateUserCart(User user)
         {
             var cart = new ShoppingCart
             {
@@ -57,7 +51,18 @@ namespace Marina.Store.Web.Commands
             return cart;
         }
 
-        private ShoppingCart CreateNewCart(IDictionary<string, object> session)
+        private ShoppingCart GetSessionCart()
+        {
+            if (!_session.ContainsKey(CART_SESSION_KEY))
+            {
+                return null;
+            }
+
+            var id = _session[CART_SESSION_KEY] as int?;
+            return _db.ShoppingCarts.FirstOrDefault(c => c.Id == id);          
+        }
+
+        private ShoppingCart CreateSessionCart(IDictionary<string, object> session)
         {
             var cart = new ShoppingCart();
             _db.ShoppingCarts.Add(cart);
@@ -65,5 +70,7 @@ namespace Marina.Store.Web.Commands
             session[CART_SESSION_KEY] = cart.Id;
             return cart;
         }
+
+        #endregion
     }
 }

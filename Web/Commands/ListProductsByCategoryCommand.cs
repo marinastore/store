@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using Marina.Store.Web.DataAccess;
+using Marina.Store.Web.Infrastructure.Commands;
 using Marina.Store.Web.Models;
 using System.Data.Entity;
 
@@ -14,7 +15,7 @@ namespace Marina.Store.Web.Commands
             _db = db;
         }
 
-        public CommandResult<PartialCollection<Product>> Execute(int categoryId, int skip = 0, int top = 25)
+        public Result<PartialCollection<Product>> Execute(int categoryId, int skip = 0, int top = 25)
         {
             var query = _db.Products.Include(p=>p.Params)
                 .Where(p => p.Category.Id == categoryId);
@@ -27,7 +28,7 @@ namespace Marina.Store.Web.Commands
 
             var total = query.Count();
             
-            return Result(new PartialCollection<Product>(total, products));
+            return new PartialCollection<Product>(total, products);
         }
     }
 }

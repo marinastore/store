@@ -89,8 +89,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\AddToShoppingCartCommand.cs" />
-    <Compile Include="Commands\Command.cs" />
-    <Compile Include="Commands\CommandResult.cs" />
     <Compile Include="Commands\AddRegistrationRequestCommand.cs" />
     <Compile Include="Commands\FulfillRegistrationRequestCommand.cs" />
     <Compile Include="Commands\GetProductCommand.cs" />
@@ -111,6 +109,12 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\Commands\Command.cs" />
+    <Compile Include="Infrastructure\Commands\ErrorOutcome.cs" />
+    <Compile Include="Infrastructure\Commands\State.cs" />
+    <Compile Include="Infrastructure\Commands\Outcome.cs" />
+    <Compile Include="Infrastructure\Commands\Result.cs" />
+    <Compile Include="Infrastructure\Commands\SuccessOutcome.cs" />
     <Compile Include="MailService\IMailService.cs" />
     <Compile Include="Models\Address.cs" />
     <Compile Include="Models\CartItem.cs" />

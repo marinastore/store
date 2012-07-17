@@ -26,12 +26,12 @@ namespace Marina.Store.Tests.Commands
 
             // Assert
 
-            AssertCommandSuccess(result);
-            Assert.AreEqual(product.Id, result.Model.Id, "Возвратился продукт с неверным Id");
-            Assert.IsNotNull(result.Model.Category, "Продукт вернулся без категории");
-            Assert.AreEqual(product.Name, result.Model.Name, "Неверное имя продукта");
-            Assert.IsNotNull(result.Model.Params, "Продукт вернулся без параметров");
-            Assert.AreEqual(product.Params.Count, result.Model.Params.Count, "Проукт вернулся с неверным числом параметров");
+            AssertSuccess(result);
+            Assert.AreEqual(product.Id, result.Value.Id, "Возвратился продукт с неверным Id");
+            Assert.IsNotNull(result.Value.Category, "Продукт вернулся без категории");
+            Assert.AreEqual(product.Name, result.Value.Name, "Неверное имя продукта");
+            Assert.IsNotNull(result.Value.Params, "Продукт вернулся без параметров");
+            Assert.AreEqual(product.Params.Count, result.Value.Params.Count, "Проукт вернулся с неверным числом параметров");
         }
     }
 }

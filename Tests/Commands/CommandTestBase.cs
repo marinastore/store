@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Globalization;
+using System.Linq.Expressions;
 using Marina.Store.Web.Commands;
 using Marina.Store.Web.DataAccess;
+using Marina.Store.Web.Infrastructure.Commands;
 using Marina.Store.Web.MailService;
 using Marina.Store.Web.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -47,23 +49,24 @@ namespace Marina.Store.Tests.Commands
 
 
         #region Asserts
-
+        
         /// <summary>
         /// Проверить, что комманда успешно выполнена
         /// </summary>
-        public void AssertCommandError(CommandResult result, string hasErrorsMessage = "Комманда выполнилась без ошибок")
+        public void AssertSuccess(Result result)
         {
             Assert.IsNotNull(result, "Не возвратился результат");
-            Assert.IsTrue(result.HasErrors, hasErrorsMessage);
+            Assert.IsFalse(result.HasErrors, string.Format("Комманда выполнилась с ошибкой: {0}", result.Outcome.Description));
         }
 
         /// <summary>
         /// Проверить, что комманда выполнена с ошибками
         /// </summary>
-        public void AssertCommandSuccess(CommandResult result)
+        public void AssertError<T>(Result result, Expression<Func<T, State>> state, string hasErrorsMessage = "Комманда выполнилась без ошибок") where T : Command
         {
             Assert.IsNotNull(result, "Не возвратился результат");
-            Assert.IsFalse(result.HasErrors, "Комманда выполнилась с ошибками");
+            Assert.IsTrue(result.HasErrors, hasErrorsMessage);
+            Assert.IsTrue(result.Is(state), "Неверная ошибка: " + result.Outcome.Description);
         }
 
         #endregion
@@ -245,7 +248,7 @@ namespace Marina.Store.Tests.Commands
             cart = cart ?? CreateCart();
 
             var moq = new Mock<GetShoppingCartCommand>(null, null, null);
-            moq.Setup(c => c.Execute()).Returns(new CommandResult<ShoppingCart>(cart));
+            moq.Setup(c => c.Execute()).Returns(cart);
 
             return moq;
         }

@@ -1,5 +1,6 @@
-﻿using System.Web.Mvc;
-using Marina.Store.Web.Commands;
+﻿using System;
+using System.Web.Mvc;
+using Marina.Store.Web.Infrastructure.Commands;
 
 namespace Marina.Store.Web.Controllers
 {
@@ -8,9 +9,11 @@ namespace Marina.Store.Web.Controllers
     /// </summary>
     public abstract class StoreController : Controller
     {
-        public T Using<T>() where T : Command
+        public TR Run<T, TR>(Func<T, TR> what) where T : Command where TR : Result
         {
-            return DependencyResolver.Current.GetService<T>();
+            var cmd = DependencyResolver.Current.GetService<T>();
+            var result = what(cmd);
+            return result;
         }
     }
 }

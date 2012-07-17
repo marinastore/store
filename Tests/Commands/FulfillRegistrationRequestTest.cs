@@ -36,7 +36,7 @@ namespace Marina.Store.Tests.Commands
 
             // Assert
 
-            AssertCommandSuccess(result);
+            AssertSuccess(result);
             Assert.AreEqual(1, Db.Users.Count(u => u.Email == request.Email), "Новый пользователь не создался, либо создалось несколько пользователей");
         }
 
@@ -57,7 +57,7 @@ namespace Marina.Store.Tests.Commands
 
             // Assert
 
-            AssertCommandError(result, "Нет проверки минимальной длины пароля"); 
+            AssertError(result, (FulfillRegistrationRequestCommand c)=>c.IncorrectPasswordFormat); 
             // TODO: задачка для самостоятельного решения: проверка нужна при регистрации и смене пароля, как организовать проверку пароля и тестирование?
         }
 
@@ -80,7 +80,7 @@ namespace Marina.Store.Tests.Commands
 
             // Assert
 
-            AssertCommandSuccess(result);
+            AssertSuccess(result);
             var user = Db.Users.First(u => u.Email == request.Email);
             Assert.IsNotNull(user.PasswordHash, "Хэш пароля не сохранился");
             Assert.AreNotEqual(PASSWORD, user.PasswordHash, "Сохранился сам пароль, а не его хэш");
@@ -107,7 +107,7 @@ namespace Marina.Store.Tests.Commands
 
             // Assert 
 
-            AssertCommandError(result);
+            AssertError(result, (FulfillRegistrationRequestCommand c)=>c.EmailAlreadyRegistered);
         }
 
         
@@ -132,7 +132,7 @@ namespace Marina.Store.Tests.Commands
 
             // Assert
             
-            AssertCommandSuccess(result);
+            AssertSuccess(result);
             Assert.IsTrue(Db.ShoppingCarts.Any(c=>c.User.Email == request.Email && c.Items.Any()), "Покупки не перенеслись в корзину пользователя");
         }
     }

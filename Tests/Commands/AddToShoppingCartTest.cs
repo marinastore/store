@@ -1,8 +1,6 @@
 ﻿using System.Linq;
 using Marina.Store.Web.Commands;
-using Marina.Store.Web.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
 
 namespace Marina.Store.Tests.Commands
 {
@@ -30,7 +28,7 @@ namespace Marina.Store.Tests.Commands
 
             // Assert
 
-            AssertCommandSuccess(result);
+            AssertSuccess(result);
             Assert.AreEqual(1, cart.Items.Count, "Товар не добавился в корзину"); 
             Assert.AreEqual(product.Id, cart.Items.First().ProductId, "Добавился не тот продукт");
         }
@@ -56,7 +54,7 @@ namespace Marina.Store.Tests.Commands
 
             // Assert
 
-            AssertCommandSuccess(result);
+            AssertSuccess(result);
             Assert.AreEqual(1, cart.Items.Count, "Добавился новый товар");
             Assert.AreEqual(3, cart.Items.First().Amount, "Количество товара не увеличилось");
         }

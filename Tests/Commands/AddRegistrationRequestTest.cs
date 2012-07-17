@@ -33,7 +33,7 @@ namespace Marina.Store.Tests.Commands
 
             // Assert
 
-            AssertCommandSuccess(result);
+            AssertSuccess(result);
             var reqests = Db.RegistrationRequests.Where(r => r.Email == email).ToArray();
             Assert.IsTrue(reqests.Any(), "Заявка не добавилась");
             Assert.AreEqual(1, reqests.Count(), "Добавилась лишняя заявка");
@@ -58,7 +58,7 @@ namespace Marina.Store.Tests.Commands
 
             // Assert
             
-            AssertCommandError(result);
+            AssertError(result, (AddRegistrationRequestCommand c)=>c.InvalidEmail);
         }
 
         /// <summary>
@@ -82,7 +82,7 @@ namespace Marina.Store.Tests.Commands
 
             // Assert
 
-            AssertCommandError(result);
+            AssertError(result, (AddRegistrationRequestCommand c) => c.EmailAlreadyRegistered);
         }
 
         /// <summary>
@@ -107,7 +107,7 @@ namespace Marina.Store.Tests.Commands
 
             // Assert
 
-            AssertCommandSuccess(result);
+            AssertSuccess(result);
             Assert.IsTrue(Db.RegistrationRequests.Any(r=>r.Email == email && r.ShoppingCartId == nonEmptyCart.Id), "Ссылка на непустую корзину не создалась");
 
             // Arrange 2 (пустая корзина)
@@ -124,7 +124,7 @@ namespace Marina.Store.Tests.Commands
 
             // Assert 2 (пустая корзина)
 
-            AssertCommandSuccess(result2);
+            AssertSuccess(result2);
             Assert.IsTrue(Db.RegistrationRequests.Any(r => r.Email == email2 && r.ShoppingCartId == null), "Создалась ссылка на пустую корзину");
         }
 
@@ -146,7 +146,7 @@ namespace Marina.Store.Tests.Commands
 
             // Assert
 
-            AssertCommandSuccess(result);
+            AssertSuccess(result);
             mailMoq.Verify(s=>s.SendUserConfirmatiom(email, It.IsAny<string>()), Times.Exactly(1), "Письмо с подтверждением не отправлено");
         }
 

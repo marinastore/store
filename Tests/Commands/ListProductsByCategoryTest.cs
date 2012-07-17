@@ -26,10 +26,10 @@ namespace Marina.Store.Tests.Commands
 
             // Assert
 
-            AssertCommandSuccess(result);
-            Assert.IsTrue(result.Model.Any(), "Не возвратились продукты");
-            Assert.AreEqual(2, result.Model.Count, "Возвратились не все продукты, либо врозвратились лишние");
-            Assert.IsTrue(result.Model.All(p => p.Params.Any()), "Не возвратились параметры продуктов");
+            AssertSuccess(result);
+            Assert.IsTrue(result.Value.Any(), "Не возвратились продукты");
+            Assert.AreEqual(2, result.Value.Count, "Возвратились не все продукты, либо врозвратились лишние");
+            Assert.IsTrue(result.Value.All(p => p.Params.Any()), "Не возвратились параметры продуктов");
         }
 
         /// <summary>
@@ -52,9 +52,9 @@ namespace Marina.Store.Tests.Commands
 
             // Assert
 
-            AssertCommandSuccess(result);
-            Assert.AreEqual(2, result.Model.Count, "Возвратилось неверное кол-во товаров");
-            Assert.IsTrue(result.Model.All(p => p.CategoryId == category.Id), "Возвратились товары из другой категории");
+            AssertSuccess(result);
+            Assert.AreEqual(2, result.Value.Count, "Возвратилось неверное кол-во товаров");
+            Assert.IsTrue(result.Value.All(p => p.CategoryId == category.Id), "Возвратились товары из другой категории");
         }
 
         /// <summary>
@@ -77,9 +77,9 @@ namespace Marina.Store.Tests.Commands
 
             // Assert
 
-            AssertCommandSuccess(result);
-            Assert.AreEqual(50, result.Model.TotalCount, "Вернулось неправильное кол-во товаров в категории");
-            Assert.AreEqual(25, result.Model.Count, "Возвратилось неправильное кол-во товаров первой страницы");
+            AssertSuccess(result);
+            Assert.AreEqual(50, result.Value.TotalCount, "Вернулось неправильное кол-во товаров в категории");
+            Assert.AreEqual(25, result.Value.Count, "Возвратилось неправильное кол-во товаров первой страницы");
 
             // Act 2
 
@@ -87,9 +87,9 @@ namespace Marina.Store.Tests.Commands
 
             // Assert 2
 
-            AssertCommandSuccess(result2);
-            Assert.AreEqual(50, result2.Model.TotalCount, "Вернулось неправильное кол-во товаров в категории");
-            Assert.AreEqual(20, result2.Model.Count, "Возвратилось неправильное кол-во товаров второй страницы");
+            AssertSuccess(result2);
+            Assert.AreEqual(50, result2.Value.TotalCount, "Вернулось неправильное кол-во товаров в категории");
+            Assert.AreEqual(20, result2.Value.Count, "Возвратилось неправильное кол-во товаров второй страницы");
         }
     }
 }

@@ -31,10 +31,10 @@ namespace Marina.Store.Tests.Commands
 
             // Assert
 
-            AssertCommandSuccess(result);
-            Assert.IsNotNull(result.Model, "Не вернулась корзина");
+            AssertSuccess(result);
+            Assert.IsNotNull(result.Value, "Не вернулась корзина");
             Assert.AreEqual(1, Db.ShoppingCarts.Count(c => c.User.Id == user.Id), "Создалась новая корзина, либо удалилась старая");
-            Assert.AreEqual(cart.Id, result.Model.Id, "Вернулась чужая корзина");
+            Assert.AreEqual(cart.Id, result.Value.Id, "Вернулась чужая корзина");
         }
 
         /// <summary>
@@ -57,9 +57,9 @@ namespace Marina.Store.Tests.Commands
 
             // Assert
 
-            AssertCommandSuccess(result);
-            Assert.IsNotNull(result.Model, "Не вернулась корзина");
-            Assert.AreEqual(user.Id, result.Model.User.Id, "Вернулась чужая корзина");
+            AssertSuccess(result);
+            Assert.IsNotNull(result.Value, "Не вернулась корзина");
+            Assert.AreEqual(user.Id, result.Value.User.Id, "Вернулась чужая корзина");
             Assert.AreEqual(1, Db.ShoppingCarts.Count(c => c.User.Id == user.Id), "Не создалась новая корзина, либо появилась лишняя");
         }
 
@@ -85,9 +85,9 @@ namespace Marina.Store.Tests.Commands
 
             // Assert
 
-            AssertCommandSuccess(result);
-            Assert.IsNotNull(result.Model, "Не вернулась корзина");
-            Assert.AreEqual(cart.Id, result.Model.Id, "Вернулась чужая корзина");
+            AssertSuccess(result);
+            Assert.IsNotNull(result.Value, "Не вернулась корзина");
+            Assert.AreEqual(cart.Id, result.Value.Id, "Вернулась чужая корзина");
         }
 
         /// <summary>
@@ -108,9 +108,9 @@ namespace Marina.Store.Tests.Commands
 
             // Assert
 
-            AssertCommandSuccess(result);
-            Assert.IsNotNull(result.Model, "Не вернулась корзина");
-            Assert.AreEqual(result.Model.Id, session[GetShoppingCartCommand.CART_SESSION_KEY], "Id корзины не сохранился в сессию");
+            AssertSuccess(result);
+            Assert.IsNotNull(result.Value, "Не вернулась корзина");
+            Assert.AreEqual(result.Value.Id, session[GetShoppingCartCommand.CART_SESSION_KEY], "Id корзины не сохранился в сессию");
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using Marina.Store.Web.DataAccess;
+using Marina.Store.Web.Infrastructure.Commands;
 using Marina.Store.Web.Models;
 
 namespace Marina.Store.Web.Commands
@@ -16,24 +17,28 @@ namespace Marina.Store.Web.Commands
         {
             _db = db;
         }
+
+        public State IncorrectPasswordFormat;
+        public State RegistrationRequestNotFound;
+        public State EmailAlreadyRegistered;
         
-        public CommandResult Execute(Guid registrationRequestId, string password)
+        public Result Execute(Guid registrationRequestId, string password)
         {
             if (!CheckPasswordPolicy(password))
             {
-                return Fail("password", "Неверный формат пароля");
+                return Fail(()=>IncorrectPasswordFormat, "Неверный формат пароля");
             }
 
             var request = _db.RegistrationRequests.FirstOrDefault(r => r.Id == registrationRequestId);
 
             if (!CheckRequestExists(request))
             {
-                return Fail("request", "Не существует заявки с id " + registrationRequestId);
+                return Fail(()=>RegistrationRequestNotFound, "Не существует заявки с id " + registrationRequestId);
             }
 
             if (!CheckEmailAvailible(request.Email))
             {
-                return Fail("email", "Пользователь с таким емайлом существует " + request.Email);
+                return Fail(()=>EmailAlreadyRegistered, "Пользователь с таким емайлом существует " + request.Email);
             }
 
             var user = CreateUser(request, password);
@@ -44,8 +49,10 @@ namespace Marina.Store.Web.Commands
             {
                 _db.ShoppingCarts.Add(cart);
             }
-            return Success();
+            return Ok();
         }
+
+        #region Private helpers
 
         private ShoppingCart MigrateCart(int? shoppingCartId, User user)
         {
@@ -101,5 +108,7 @@ namespace Marina.Store.Web.Commands
         {
             return password != null && password.Length >= MIN_PASSWORD_LENGTH;
         }
+
+        #endregion
     }
 }
