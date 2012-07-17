@@ -77,6 +77,7 @@ namespace Marina.Store.Tests.Commands
         public void CleanUpDatabase()
         {
             _db.Database.ExecuteSqlCommand("delete from CartItems");
+            _db.Database.ExecuteSqlCommand("delete from RegistrationRequests");
             _db.Database.ExecuteSqlCommand("delete from ShoppingCarts");
             _db.Database.ExecuteSqlCommand("delete from OrderLines");
             _db.Database.ExecuteSqlCommand("delete from Orders");
@@ -85,7 +86,6 @@ namespace Marina.Store.Tests.Commands
             _db.Database.ExecuteSqlCommand("delete from Products");
             _db.Database.ExecuteSqlCommand("delete from Categories");
             _db.Database.ExecuteSqlCommand("delete from Users");
-            _db.Database.ExecuteSqlCommand("delete from RegistrationRequests");
         }
 
         /// <summary>
@@ -136,7 +136,9 @@ namespace Marina.Store.Tests.Commands
             var user = new User
             {
                 FirstName = "Пользователь" + num,
-                LastName = num.ToString(CultureInfo.InvariantCulture)
+                LastName = num.ToString(CultureInfo.InvariantCulture),
+                Email = Guid.NewGuid().ToString() + "@mail.ru",
+                PasswordHash = Guid.NewGuid().ToString()
             };
 
             Db.Users.Add(user);

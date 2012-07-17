@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace Marina.Store.Web.Models
@@ -14,6 +15,23 @@ namespace Marina.Store.Web.Models
         public decimal Total
         {
             get { return Items == null ? 0 : Items.Sum(l => l.Product.Price * l.Amount); }
+        }
+
+        public void ReplaceItems(ICollection<CartItem> items)
+        {
+            if (Items != null)
+            {
+                Items.Clear();
+            }
+            else
+            {
+                Items = new Collection<CartItem>();
+            }
+
+            foreach(var item in items)
+            {
+                Items.Add(new CartItem(item));
+            }
         }
 
     }

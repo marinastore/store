@@ -10,22 +10,67 @@ namespace Marina.Store.Web.Commands
     public class FulfillRegistrationRequestCommand : Command
     {
         private readonly StoreDbContext _db;
-        private readonly GetShoppingCartCommand _getCartCmd;
+        public const int MIN_PASSWORD_LENGTH = 4; 
 
-        public FulfillRegistrationRequestCommand(StoreDbContext db, GetShoppingCartCommand getCartCmd)
+        public FulfillRegistrationRequestCommand(StoreDbContext db)
         {
             _db = db;
-            _getCartCmd = getCartCmd;
         }
         
         public CommandResult Execute(Guid registrationRequestId, string password)
         {
-            var request = _db.RegistrationRequests.First(r => r.Id == registrationRequestId);
-            if (request == null)
+            if (!CheckPasswordPolicy(password))
+            {
+                return Fail("password", "Неверный формат пароля");
+            }
+
+            var request = _db.RegistrationRequests.FirstOrDefault(r => r.Id == registrationRequestId);
+
+            if (!CheckRequestExists(request))
             {
                 return Fail("request", "Не существует заявки с id " + registrationRequestId);
             }
 
+            if (!CheckEmailAvailible(request.Email))
+            {
+                return Fail("email", "Пользователь с таким емайлом существует " + request.Email);
+            }
+
+            var user = CreateUser(request, password);
+            var cart = MigrateCart(request.ShoppingCartId, user);
+
+            _db.Users.Add(user);
+            if (cart != null)
+            {
+                _db.ShoppingCarts.Add(cart);
+            }
+            return Success();
+        }
+
+        private ShoppingCart MigrateCart(int? shoppingCartId, User user)
+        {
+            if (!shoppingCartId.HasValue)
+            {
+                return null;
+            }
+
+            var cart = _db.ShoppingCarts.FirstOrDefault(c=>c.Id == shoppingCartId);
+
+            if (cart == null)
+            {
+                return null;
+            }
+            var newCart = new ShoppingCart
+            {
+                User = user
+            };
+            newCart.ReplaceItems(cart.Items);
+
+            return newCart;
+        }
+
+        private static User CreateUser(RegistrationRequest request, string password)
+        {
             string passwordHash;
             using (var sha1 = new SHA1CryptoServiceProvider())
             {
@@ -39,9 +84,22 @@ namespace Marina.Store.Web.Commands
                 PasswordHash = passwordHash
             };
 
-            _db.Users.Add(user);
+            return user;
+        }
 
-            return Success();
+        private bool CheckEmailAvailible(string email)
+        {
+            return !_db.Users.Any(u => u.Email == email);
+        }
+
+        private static bool CheckRequestExists(RegistrationRequest request)
+        {
+            return request != null;
+        }
+
+        private static bool CheckPasswordPolicy(string password)
+        {
+            return password != null && password.Length >= MIN_PASSWORD_LENGTH;
         }
     }
 }

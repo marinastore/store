@@ -30,7 +30,7 @@ namespace Marina.Store.Tests.Commands
 
             // Act
 
-            var cmd = new FulfillRegistrationRequestCommand(Db, MoqGetShoppingCart().Object);
+            var cmd = new FulfillRegistrationRequestCommand(Db);
             var result = cmd.Execute(request.Id, PASSWORD);
             Db.SaveChanges();
 
@@ -52,7 +52,7 @@ namespace Marina.Store.Tests.Commands
 
             // Act
 
-            var cmd = new FulfillRegistrationRequestCommand(Db, MoqGetShoppingCart().Object);
+            var cmd = new FulfillRegistrationRequestCommand(Db);
             var result = cmd.Execute(requestId, "1");
 
             // Assert
@@ -74,7 +74,7 @@ namespace Marina.Store.Tests.Commands
 
             // Act
 
-            var cmd = new FulfillRegistrationRequestCommand(Db, MoqGetShoppingCart().Object);
+            var cmd = new FulfillRegistrationRequestCommand(Db);
             var result = cmd.Execute(request.Id, PASSWORD);
             Db.SaveChanges();
 
@@ -102,7 +102,7 @@ namespace Marina.Store.Tests.Commands
 
             // Act
 
-            var cmd = new FulfillRegistrationRequestCommand(Db, MoqGetShoppingCart().Object);
+            var cmd = new FulfillRegistrationRequestCommand(Db);
             var result = cmd.Execute(request.Id, PASSWORD);
 
             // Assert 
@@ -126,7 +126,7 @@ namespace Marina.Store.Tests.Commands
 
             // Act
 
-            var cmd = new FulfillRegistrationRequestCommand(Db, MoqGetShoppingCart().Object);
+            var cmd = new FulfillRegistrationRequestCommand(Db);
             var result = cmd.Execute(request.Id, PASSWORD);
             Db.SaveChanges();
 
