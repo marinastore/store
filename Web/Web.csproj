@@ -96,7 +96,6 @@
     <Compile Include="Commands\ListProductsByCategoryCommand.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\StoreController.cs" />
-    <Compile Include="DataAccess\AuomaticMigrationsConfiguration.cs" />
     <Compile Include="DataAccess\Mappings\AddressMapping.cs" />
     <Compile Include="DataAccess\Mappings\CartItemMapping.cs" />
     <Compile Include="DataAccess\Mappings\CategoryMapping.cs" />

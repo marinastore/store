@@ -35,6 +35,19 @@ namespace Marina.Store.Web
 
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
+
+            InitDatabase();
+        }
+
+        private static void InitDatabase()
+        {
+            Database.DefaultConnectionFactory = new SqlCeConnectionFactory("System.Data.SqlServerCe.4.0");
+            Database.SetInitializer(new DropCreateDatabaseIfModelChanges<StoreDbContext>());
+
+            using(var db = new StoreDbContext())
+            {
+                db.Products.Add(new Product());
+            }
         }
     }
 }

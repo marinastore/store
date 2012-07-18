@@ -18,7 +18,6 @@ namespace Marina.Store.Web.DataAccess
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            // маппиги
             modelBuilder.Configurations
                 .Add(new ProductMapping())
                 .Add(new ParamMapping())
@@ -31,9 +30,6 @@ namespace Marina.Store.Web.DataAccess
                 .Add(new OrderLineMapping())
                 .Add(new RegistrationRequestMapping())
                 ;
-
-            // миграции
-            Database.SetInitializer(new MigrateDatabaseToLatestVersion<StoreDbContext, AuomaticMigrationsConfiguration>());
         }
     }
 }
