@@ -94,6 +94,7 @@
     <Compile Include="Commands\GetProductCommand.cs" />
     <Compile Include="Commands\GetShoppingCartCommand.cs" />
     <Compile Include="Commands\ListProductsByCategoryCommand.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\StoreController.cs" />
     <Compile Include="DataAccess\Mappings\AddressMapping.cs" />
     <Compile Include="DataAccess\Mappings\CartItemMapping.cs" />
@@ -199,15 +200,10 @@
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Web.Debug.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </Content>
-    <Content Include="Web.Release.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </Content>
     <Content Include="Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="App_Data\" />
     <Folder Include="ViewModels\" />
     <Folder Include="Views\Shared\" />
   </ItemGroup>
