@@ -1,4 +1,5 @@
 ﻿using System.Data.Entity;
+using Marina.Store.Web.DataAccess.Initializers;
 using Marina.Store.Web.DataAccess.Mappings;
 using Marina.Store.Web.Models;
 
@@ -33,7 +34,7 @@ namespace Marina.Store.Web.DataAccess
                 ;
 
             // миграции
-            Database.SetInitializer(new MigrateDatabaseToLatestVersion<StoreDbContext, AuomaticMigrationsConfiguration>());
+            Database.SetInitializer(new MigrateDatabaseToLatestVersion<StoreDbContext, AutoMigrationsConfig>());
         }
     }
 }
