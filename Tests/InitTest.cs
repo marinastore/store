@@ -1,4 +1,5 @@
 ﻿using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 using Marina.Store.Web.DataAccess;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 

@@ -1,4 +1,5 @@
 ﻿using System.Data.Entity;
+using Marina.Store.Web.DataAccess.Initializers;
 using Marina.Store.Web.DataAccess.Mappings;
 using Marina.Store.Web.Models;
 
@@ -18,6 +19,8 @@ namespace Marina.Store.Web.DataAccess
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            Database.SetInitializer(new MigrateDatabaseToLatestVersion<StoreDbContext, AutoMigrationsConfiguration>());
+
             modelBuilder.Configurations
                 .Add(new ProductMapping())
                 .Add(new ParamMapping())

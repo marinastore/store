@@ -1,9 +1,5 @@
-﻿using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using System.Web.Routing;
-using Marina.Store.Web.DataAccess;
-using Marina.Store.Web.Models;
 
 namespace Marina.Store.Web
 {
