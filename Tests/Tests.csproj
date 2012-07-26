@@ -97,6 +97,7 @@
   <ItemGroup>
     <Compile Include="Commands\AddToShoppingCartTest.cs" />
     <Compile Include="Commands\ChangeItemAmountTest.cs" />
+    <Compile Include="Commands\CreateOrderTest.cs" />
     <Compile Include="CommandTestBase.cs" />
     <Compile Include="Commands\AddRegistrationRequestTest.cs" />
     <Compile Include="Commands\DeleteFromShoppingCartTest.cs" />

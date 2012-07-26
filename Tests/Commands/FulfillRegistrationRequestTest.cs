@@ -150,5 +150,15 @@ namespace Marina.Store.Tests.Commands
             AssertSuccess(result);
             Assert.IsTrue(Db.ShoppingCarts.Any(c=>c.User.Email == request.Email && c.Items.Any()), "Покупки не перенеслись в корзину пользователя");
         }
+
+        /// <summary>
+        /// После регистрации
+        /// Пользователю отправляется email
+        /// </summary>
+        [TestMethod]
+        public void When_registration_is_finished_Must_send_email()
+        {
+            Assert.Inconclusive();
+        }
     }
 }
