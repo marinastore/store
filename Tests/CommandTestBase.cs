@@ -10,7 +10,7 @@ using Marina.Store.Web.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
-namespace Marina.Store.Tests.Commands
+namespace Marina.Store.Tests
 {
     /// <summary>
     /// Базовый класс для тестирования комманд.

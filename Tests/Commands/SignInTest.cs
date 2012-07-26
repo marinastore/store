@@ -2,10 +2,28 @@
 
 namespace Marina.Store.Tests.Commands
 {
-    // TODO: описать кейсы, связанные с самим логином (пока тут кейсы, связанные только с миграцией корзины)
     [TestClass]
-    public class SignInTest
+    public class SignInTest : CommandTestBase
     {
+        /// <summary>
+        /// При успешной аутентификации 
+        /// Возвращается пользователь
+        /// </summary>
+        [TestMethod]
+        public void When_authentication_successfull_Must_return_user()
+        {
+            Assert.Inconclusive();    
+        }
+
+        /// <summary>
+        /// При аутентификации проверяется пароль
+        /// </summary>
+        [TestMethod]
+        public void When_authenticating_Must_verify_password()
+        {
+            Assert.Inconclusive();
+        }
+
         /// <summary>
         /// Если пользовател набрал корзину до логина
         /// Товары переносятся в корзину пользователя

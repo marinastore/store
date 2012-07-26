@@ -2,11 +2,16 @@
 
 namespace Marina.Store.Tests.Commands
 {
-    // TODO: описать кейсы
-    // TODO: подумать, как удалять товар, если кол-во больше 1 :)
     [TestClass]
-    public class DeleteFromShoppingCartTest
+    public class DeleteFromShoppingCartTest: CommandTestBase
     {
-         
+        /// <summary>
+        /// Товары должны удаляться
+        /// </summary>
+        [TestMethod]
+        public void Must_delete_items()
+        {
+            Assert.Inconclusive();
+        }        
     }
 }
