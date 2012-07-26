@@ -33,7 +33,7 @@ namespace Marina.Store.Web.Commands
 
             var request = _db.RegistrationRequests.FirstOrDefault(r => r.Id == registrationRequestId);
 
-            if (!CheckRequestExists(request))
+            if (request == null)
             {
                 return Fail(()=>RegistrationRequestNotFound, "Не существует заявки с id " + registrationRequestId);
             }
@@ -80,7 +80,7 @@ namespace Marina.Store.Web.Commands
 
         private User CreateUser(RegistrationRequest request, string password)
         {
-            string passwordHash = _passwordHashPolicy.Apply(password);
+            var passwordHash = _passwordHashPolicy.Apply(password);
 
             var user = new User
             {
@@ -94,11 +94,6 @@ namespace Marina.Store.Web.Commands
         private bool CheckEmailAvailible(string email)
         {
             return !_db.Users.Any(u => u.Email == email);
-        }
-
-        private static bool CheckRequestExists(RegistrationRequest request)
-        {
-            return request != null;
         }
 
         #endregion

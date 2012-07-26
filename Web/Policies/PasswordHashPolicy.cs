@@ -12,6 +12,7 @@ namespace Marina.Store.Web.Policies
         public const int SALT_LENGTH = 50;
         public const int HASH_LENGTH = 50;
         public const int ITERATIONS = 1000;
+        public const char DELIMITER = ':';
 
         /// <summary>
         /// Сформировать хэш пароля
@@ -28,7 +29,7 @@ namespace Marina.Store.Web.Policies
             var hash = pbkdf2.GetBytes(HASH_LENGTH);
 
             // соль сохраняем вместе с хэшем (соль -- не секрет)
-            return string.Format("{0}:{1}", Convert.ToBase64String(salt), Convert.ToBase64String(hash));
+            return Convert.ToBase64String(salt) + DELIMITER + Convert.ToBase64String(hash);
         }
 
         /// <summary>
@@ -46,7 +47,7 @@ namespace Marina.Store.Web.Policies
                 throw new ArgumentNullException("hashedPassword");
             }
 
-            var split = hashedPassword.Split(':');
+            var split = hashedPassword.Split(DELIMITER);
 
             if (split.Length != 2)
             {

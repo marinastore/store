@@ -106,6 +106,7 @@
     <Compile Include="Commands\SignInTest.cs" />
     <Compile Include="InitTest.cs" />
     <Compile Include="Models\ShoppingCartTest.cs" />
+    <Compile Include="Policies\PasswordHashPolicyTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
