@@ -23,7 +23,7 @@ namespace Marina.Store.Web.Commands
             }
 
             // получаем корзину
-            var cartResult = _getCartCmd.Execute();
+            var cartResult = _getCartCmd.Execute(GetShoppingCartCommand.FetchMode.GetOrCreate);
             if (cartResult.HasErrors)
             {
                 return cartResult.Outcome;
@@ -31,7 +31,6 @@ namespace Marina.Store.Web.Commands
             var cart = cartResult.Value;
 
             // добавляем товар
-            // TODO: логику добавления товаров перенести в корзину
             var item = cart.Items.FirstOrDefault(c => c.ProductId == productId);
             if (item == null)
             {

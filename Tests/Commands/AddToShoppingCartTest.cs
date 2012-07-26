@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Marina.Store.Web.Commands;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 
 namespace Marina.Store.Tests.Commands
 {
@@ -20,10 +21,11 @@ namespace Marina.Store.Tests.Commands
             CreateProduct();
             var cart = CreateCart();
             Db.SaveChanges();
+            var getCartMoq = MoqGetShoppingCart(cart);
 
             // Act
 
-            var cmd = new AddToShoppingCartCommand(MoqGetShoppingCart(cart).Object);
+            var cmd = new AddToShoppingCartCommand(getCartMoq.Object);
             var result = cmd.Execute(product.Id);
 
             // Assert
@@ -31,6 +33,7 @@ namespace Marina.Store.Tests.Commands
             AssertSuccess(result);
             Assert.AreEqual(1, cart.Items.Count, "Товар не добавился в корзину"); 
             Assert.AreEqual(product.Id, cart.Items.First().ProductId, "Добавился не тот продукт");
+            getCartMoq.Verify(c => c.Execute(GetShoppingCartCommand.FetchMode.GetOrCreate), Times.Exactly(1), "Комманда GetCart вызвана не в режиме GetOrDefault");
         }
 
         /// <summary>

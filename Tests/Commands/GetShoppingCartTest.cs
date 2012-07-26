@@ -5,18 +5,17 @@ using System.Linq;
 
 namespace Marina.Store.Tests.Commands
 {
-    // TODO:  прверить на прчность -- разрешить возвращать null
     [TestClass]
     public class GetShoppingCartTest : CommandTestBase
     {
         /// <summary>
-        /// Для пользователей, у которых есть корзина
-        /// Возвращается существующая
+        /// В режие Get, для пользователей, у которых есть корзина
+        /// Возвращается существующая или null, если корзины нет
         /// </summary>
         [TestMethod]
         public void When_there_is_cart_for_user_Must_return_existing_cart()
         {
-            // Arrange
+            // Arrange, случай, если корзина есть 
 
             CreateCart();
             var user = CreateUser();
@@ -27,7 +26,7 @@ namespace Marina.Store.Tests.Commands
             // Act
 
             var cmd = new GetShoppingCartCommand(Db, user);
-            var result = cmd.Execute();
+            var result = cmd.Execute(GetShoppingCartCommand.FetchMode.Get);
 
             // Assert
 
@@ -35,10 +34,24 @@ namespace Marina.Store.Tests.Commands
             Assert.IsNotNull(result.Value, "Не вернулась корзина");
             Assert.AreEqual(1, Db.ShoppingCarts.Count(c => c.User.Id == user.Id), "Создалась новая корзина, либо удалилась старая");
             Assert.AreEqual(cart.Id, result.Value.Id, "Вернулась чужая корзина");
+
+            // Arrange2, случай, если корзины нет
+
+            var user2 = CreateUser();
+            Db.SaveChanges();
+
+            // Act2
+
+            var cmd2 = new GetShoppingCartCommand(Db, user2);
+            var result2 = cmd2.Execute(GetShoppingCartCommand.FetchMode.Get);
+
+            // Assert2
+            AssertSuccess(result2);
+            Assert.IsNull(result2.Value, "Не вернулся null, если нет корзины");
         }
 
         /// <summary>
-        /// Для пользователей, у которых нет корзины, 
+        /// В режие getOrCreate для пользователей, у которых нет корзины 
         /// Создается новая
         /// </summary>
         [TestMethod]
@@ -53,7 +66,7 @@ namespace Marina.Store.Tests.Commands
             // Act
 
             var cmd = new GetShoppingCartCommand(Db, user);
-            var result = cmd.Execute();
+            var result = cmd.Execute(GetShoppingCartCommand.FetchMode.GetOrCreate);
 
             // Assert
 
@@ -65,13 +78,13 @@ namespace Marina.Store.Tests.Commands
 
 
         /// <summary>
-        /// Для незалогинненых пользователей
+        /// В режиме Get, для незалогинненых пользователей
         /// Возвращается корзина, привязанная к текущей сессии
         /// </summary>
         [TestMethod]
         public void When_user_is_not_signed_in_Must_return_existing_cart_for_session()
         {
-            // Arrange
+            // Arrange, в случае, если корзина существует
 
             var cart = CreateCart();
             Db.SaveChanges();
@@ -81,17 +94,31 @@ namespace Marina.Store.Tests.Commands
             // Act
 
             var cmd = new GetShoppingCartCommand(Db, null, session);
-            var result = cmd.Execute();
+            var result = cmd.Execute(GetShoppingCartCommand.FetchMode.Get);
 
             // Assert
 
             AssertSuccess(result);
             Assert.IsNotNull(result.Value, "Не вернулась корзина");
             Assert.AreEqual(cart.Id, result.Value.Id, "Вернулась чужая корзина");
+
+            // Arrange2, в случае, если корзины не существует
+            
+            var emptySession = new Dictionary<string, object>();
+
+            // Act2
+
+            var cmd2 = new GetShoppingCartCommand(Db, null, emptySession);
+            var result2 = cmd2.Execute(GetShoppingCartCommand.FetchMode.Get);
+
+            // Assert2
+
+            AssertSuccess(result2);
+            Assert.IsNull(result2.Value, "Не вернулся null, если нет корзины");
         }
 
         /// <summary>
-        /// Для незалогинненых пользователей без корзины
+        /// В режиме GetOrDefault для незалогинненых пользователей без корзины
         /// Создается новая корзина, ее id помещается в сессию
         /// </summary>
         [TestMethod]
@@ -104,7 +131,7 @@ namespace Marina.Store.Tests.Commands
             // Act
 
             var cmd = new GetShoppingCartCommand(Db, null, session);
-            var result = cmd.Execute();
+            var result = cmd.Execute(GetShoppingCartCommand.FetchMode.GetOrCreate);
 
             // Assert
 

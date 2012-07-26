@@ -24,19 +24,22 @@ namespace Marina.Store.Tests.Commands
             // Arrange
 
             var email = RandomEmail();
+            var getCartMoq = MoqGetShoppingCart();
 
             // Act
 
-            var cmd = new AddRegistrationRequestCommand(Db, MoqGetShoppingCart().Object, MoqMailService().Object);
+            var cmd = new AddRegistrationRequestCommand(Db, getCartMoq.Object, MoqMailService().Object);
             var result = cmd.Execute(email);
             Db.SaveChanges();
 
             // Assert
 
             AssertSuccess(result);
+
             var reqests = Db.RegistrationRequests.Where(r => r.Email == email).ToArray();
             Assert.IsTrue(reqests.Any(), "Заявка не добавилась");
             Assert.AreEqual(1, reqests.Count(), "Добавилась лишняя заявка");
+            getCartMoq.Verify(c=>c.Execute(GetShoppingCartCommand.FetchMode.GetOrCreate), Times.Exactly(1), "Комманда GetCart вызвана не в режиме GetOrDefault");
         }
 
 
@@ -50,10 +53,11 @@ namespace Marina.Store.Tests.Commands
             // Arrange
 
             const string email = "not valid email";
+            var getCartMoq = MoqGetShoppingCart();
 
             // Act
 
-            var cmd = new AddRegistrationRequestCommand(Db, MoqGetShoppingCart().Object, MoqMailService().Object);
+            var cmd = new AddRegistrationRequestCommand(Db, getCartMoq.Object, MoqMailService().Object);
             var result = cmd.Execute(email);
 
             // Assert

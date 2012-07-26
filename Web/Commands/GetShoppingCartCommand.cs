@@ -14,6 +14,19 @@ namespace Marina.Store.Web.Commands
         private readonly IDictionary<string,object> _session;
         public const string CART_SESSION_KEY = "shoppingCartId";
 
+        public enum FetchMode
+        {
+            /// <summary>
+            /// Вернет существующую корзину или null
+            /// </summary>
+            Get = 0, 
+            /// <summary>
+            /// Вернет корзину или создаст новую, если ее не существует
+            /// </summary>
+            GetOrCreate = 1
+        }
+
+
         public GetShoppingCartCommand(StoreDbContext db, User user, IDictionary<string, object> session = null)
         {
             _db = db;
@@ -21,14 +34,25 @@ namespace Marina.Store.Web.Commands
             _session = session;
         }
 
-        public virtual Result<ShoppingCart> Execute()
+        public virtual Result<ShoppingCart> Execute(FetchMode mode = FetchMode.Get)
         {
             if (_user == null)
             {
-                return GetSessionCart() ?? CreateSessionCart(_session);
+                var sessionCart = GetSessionCart();
+                if (sessionCart == null && mode == FetchMode.GetOrCreate)
+                {
+                    sessionCart = CreateSessionCart(_session);
+                }
+                return sessionCart;
             }
 
-            return GetUserCart() ?? CreateUserCart(_user);
+            var userCart = GetUserCart();
+            if (userCart == null && mode == FetchMode.GetOrCreate)
+            {
+                userCart = CreateUserCart(_user);
+            }
+
+            return userCart;
         }
 
         #region Private helpers

@@ -19,14 +19,8 @@ namespace Marina.Store.Web.Models
 
         public void ReplaceItems(ICollection<CartItem> items)
         {
-            if (Items != null)
-            {
-                Items.Clear();
-            }
-            else
-            {
-                Items = new Collection<CartItem>();
-            }
+            Items = Items ?? new Collection<CartItem>();
+            Items.Clear();
 
             foreach(var item in items)
             {

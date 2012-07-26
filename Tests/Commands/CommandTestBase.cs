@@ -245,10 +245,9 @@ namespace Marina.Store.Tests.Commands
         /// </summary>
         public Mock<GetShoppingCartCommand> MoqGetShoppingCart(ShoppingCart cart = null)
         {
-            cart = cart ?? CreateCart();
-
             var moq = new Mock<GetShoppingCartCommand>(null, null, null);
-            moq.Setup(c => c.Execute()).Returns(cart);
+            moq.Setup(c => c.Execute(GetShoppingCartCommand.FetchMode.Get)).Returns(cart);
+            moq.Setup(c => c.Execute(GetShoppingCartCommand.FetchMode.GetOrCreate)).Returns(cart ?? CreateCart());
 
             return moq;
         }

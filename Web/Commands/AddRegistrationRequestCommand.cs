@@ -43,7 +43,7 @@ namespace Marina.Store.Web.Commands
             }
 
             // получаем корзину
-            var cartResult = _getCartCmd.Execute();
+            var cartResult = _getCartCmd.Execute(GetShoppingCartCommand.FetchMode.GetOrCreate);
             if (cartResult.HasErrors)
             {
                 return cartResult.Outcome;

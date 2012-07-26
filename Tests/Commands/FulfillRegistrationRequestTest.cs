@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Linq;
 using Marina.Store.Web.Commands;
+using Marina.Store.Web.Policies;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 
 namespace Marina.Store.Tests.Commands
 {
@@ -15,7 +17,14 @@ namespace Marina.Store.Tests.Commands
     public class FulfillRegistrationRequestTest : CommandTestBase
     {
         private const string PASSWORD = "qwerty";
+        private Mock<PasswordFormatPolicy> _passwordFormatPolicy;
 
+        [TestInitialize]
+        public void Init()
+        {
+            _passwordFormatPolicy = new Mock<PasswordFormatPolicy>();
+            _passwordFormatPolicy.Setup(p => p.Check(It.IsAny<string>())).Returns(true);
+        }
 
         /// <summary>
         /// При регистрации создается новый пользователь
@@ -30,7 +39,7 @@ namespace Marina.Store.Tests.Commands
 
             // Act
 
-            var cmd = new FulfillRegistrationRequestCommand(Db);
+            var cmd = new FulfillRegistrationRequestCommand(Db, _passwordFormatPolicy.Object);
             var result = cmd.Execute(request.Id, PASSWORD);
             Db.SaveChanges();
 
@@ -49,16 +58,17 @@ namespace Marina.Store.Tests.Commands
             // Arrange
 
             var requestId = Guid.NewGuid();
+            _passwordFormatPolicy.Setup(p => p.Check(PASSWORD)).Returns(false);
 
             // Act
 
-            var cmd = new FulfillRegistrationRequestCommand(Db);
-            var result = cmd.Execute(requestId, "1");
+            var cmd = new FulfillRegistrationRequestCommand(Db, _passwordFormatPolicy.Object);
+            var result = cmd.Execute(requestId, PASSWORD);
 
             // Assert
 
-            AssertError(result, (FulfillRegistrationRequestCommand c)=>c.IncorrectPasswordFormat); 
-            // TODO: задачка для самостоятельного решения: проверка нужна при регистрации и смене пароля, как организовать проверку пароля и тестирование?
+            AssertError(result, (FulfillRegistrationRequestCommand c)=>c.IncorrectPasswordFormat);
+            _passwordFormatPolicy.Verify(p => p.Check(PASSWORD), Times.Exactly(1), "Пароль не проверяется");
         }
 
         /// <summary>
@@ -74,7 +84,7 @@ namespace Marina.Store.Tests.Commands
 
             // Act
 
-            var cmd = new FulfillRegistrationRequestCommand(Db);
+            var cmd = new FulfillRegistrationRequestCommand(Db, _passwordFormatPolicy.Object);
             var result = cmd.Execute(request.Id, PASSWORD);
             Db.SaveChanges();
 
@@ -102,7 +112,7 @@ namespace Marina.Store.Tests.Commands
 
             // Act
 
-            var cmd = new FulfillRegistrationRequestCommand(Db);
+            var cmd = new FulfillRegistrationRequestCommand(Db, _passwordFormatPolicy.Object);
             var result = cmd.Execute(request.Id, PASSWORD);
 
             // Assert 
@@ -126,7 +136,7 @@ namespace Marina.Store.Tests.Commands
 
             // Act
 
-            var cmd = new FulfillRegistrationRequestCommand(Db);
+            var cmd = new FulfillRegistrationRequestCommand(Db, _passwordFormatPolicy.Object);
             var result = cmd.Execute(request.Id, PASSWORD);
             Db.SaveChanges();
 

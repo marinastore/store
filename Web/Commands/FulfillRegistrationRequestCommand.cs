@@ -5,17 +5,19 @@ using System.Text;
 using Marina.Store.Web.DataAccess;
 using Marina.Store.Web.Infrastructure.Commands;
 using Marina.Store.Web.Models;
+using Marina.Store.Web.Policies;
 
 namespace Marina.Store.Web.Commands
 {
     public class FulfillRegistrationRequestCommand : Command
     {
         private readonly StoreDbContext _db;
-        public const int MIN_PASSWORD_LENGTH = 4; 
+        private readonly PasswordFormatPolicy _passwordPolicy;
 
-        public FulfillRegistrationRequestCommand(StoreDbContext db)
+        public FulfillRegistrationRequestCommand(StoreDbContext db, PasswordFormatPolicy passwordPolicy)
         {
             _db = db;
+            _passwordPolicy = passwordPolicy;
         }
 
         public State IncorrectPasswordFormat;
@@ -24,7 +26,7 @@ namespace Marina.Store.Web.Commands
         
         public Result Execute(Guid registrationRequestId, string password)
         {
-            if (!CheckPasswordPolicy(password))
+            if (!_passwordPolicy.Check(password))
             {
                 return Fail(()=>IncorrectPasswordFormat, "Неверный формат пароля");
             }
@@ -102,11 +104,6 @@ namespace Marina.Store.Web.Commands
         private static bool CheckRequestExists(RegistrationRequest request)
         {
             return request != null;
-        }
-
-        private static bool CheckPasswordPolicy(string password)
-        {
-            return password != null && password.Length >= MIN_PASSWORD_LENGTH;
         }
 
         #endregion
