@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Marina.Store.Web.Models
+﻿namespace Marina.Store.Web.Models
 {
     public class CartItem
     {

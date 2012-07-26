@@ -20,6 +20,7 @@ namespace Marina.Store.Tests.Commands
         /// Если пользовател набрал корзину до логина
         /// Она удаляется из сессии (т.к. дальше будет использоваться корзина пользователя)
         /// </summary>
+        [TestMethod]
         public void Must_delete_unsigned_session_cart_upon_sign_in()
         {
             Assert.Inconclusive();

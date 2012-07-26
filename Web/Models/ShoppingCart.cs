@@ -6,6 +6,11 @@ namespace Marina.Store.Web.Models
 {
     public class ShoppingCart
     {
+        public ShoppingCart()
+        {
+            Items = new Collection<CartItem>();
+        }
+
         public int Id { get; set; }
 
         public ICollection<CartItem> Items { get; set; }
@@ -14,12 +19,11 @@ namespace Marina.Store.Web.Models
 
         public decimal Total
         {
-            get { return Items == null ? 0 : Items.Sum(l => l.Product.Price * l.Amount); }
+            get { return Items == null ? 0 : Items.Sum(l => l.Price * l.Amount); }
         }
 
         public void ReplaceItems(ICollection<CartItem> items)
         {
-            Items = Items ?? new Collection<CartItem>();
             Items.Clear();
 
             foreach(var item in items)
