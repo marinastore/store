@@ -131,6 +131,7 @@
     <Compile Include="Models\ShoppingCart.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Policies\PasswordFormatPolicy.cs" />
+    <Compile Include="Policies\PasswordHashPolicy.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

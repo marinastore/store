@@ -17,13 +17,18 @@ namespace Marina.Store.Tests.Commands
     public class FulfillRegistrationRequestTest : CommandTestBase
     {
         private const string PASSWORD = "qwerty";
+        private const string HASH = "hash of qwerty";
         private Mock<PasswordFormatPolicy> _passwordFormatPolicy;
+        private Mock<PasswordHashPolicy> _passwordHashPolicy;
 
         [TestInitialize]
         public void Init()
         {
             _passwordFormatPolicy = new Mock<PasswordFormatPolicy>();
             _passwordFormatPolicy.Setup(p => p.Check(It.IsAny<string>())).Returns(true);
+
+            _passwordHashPolicy = new Mock<PasswordHashPolicy>();
+            _passwordHashPolicy.Setup(p => p.Apply(It.IsAny<string>())).Returns(HASH);
         }
 
         /// <summary>
@@ -39,7 +44,7 @@ namespace Marina.Store.Tests.Commands
 
             // Act
 
-            var cmd = new FulfillRegistrationRequestCommand(Db, _passwordFormatPolicy.Object);
+            var cmd = new FulfillRegistrationRequestCommand(Db, _passwordFormatPolicy.Object, _passwordHashPolicy.Object);
             var result = cmd.Execute(request.Id, PASSWORD);
             Db.SaveChanges();
 
@@ -62,7 +67,7 @@ namespace Marina.Store.Tests.Commands
 
             // Act
 
-            var cmd = new FulfillRegistrationRequestCommand(Db, _passwordFormatPolicy.Object);
+            var cmd = new FulfillRegistrationRequestCommand(Db, _passwordFormatPolicy.Object, _passwordHashPolicy.Object);
             var result = cmd.Execute(requestId, PASSWORD);
 
             // Assert
@@ -84,7 +89,7 @@ namespace Marina.Store.Tests.Commands
 
             // Act
 
-            var cmd = new FulfillRegistrationRequestCommand(Db, _passwordFormatPolicy.Object);
+            var cmd = new FulfillRegistrationRequestCommand(Db, _passwordFormatPolicy.Object, _passwordHashPolicy.Object);
             var result = cmd.Execute(request.Id, PASSWORD);
             Db.SaveChanges();
 
@@ -92,8 +97,8 @@ namespace Marina.Store.Tests.Commands
 
             AssertSuccess(result);
             var user = Db.Users.First(u => u.Email == request.Email);
-            Assert.IsNotNull(user.PasswordHash, "Хэш пароля не сохранился");
-            Assert.AreNotEqual(PASSWORD, user.PasswordHash, "Сохранился сам пароль, а не его хэш");
+            _passwordHashPolicy.Verify(p=>p.Apply(PASSWORD), Times.Exactly(1), "Не вызвана PasswordHashPolicy для генерации хэша");
+            Assert.AreEqual(HASH, user.PasswordHash, "Хэш не сохранился");
         }
 
         /// <summary>
@@ -112,7 +117,7 @@ namespace Marina.Store.Tests.Commands
 
             // Act
 
-            var cmd = new FulfillRegistrationRequestCommand(Db, _passwordFormatPolicy.Object);
+            var cmd = new FulfillRegistrationRequestCommand(Db, _passwordFormatPolicy.Object, _passwordHashPolicy.Object);
             var result = cmd.Execute(request.Id, PASSWORD);
 
             // Assert 
@@ -136,7 +141,7 @@ namespace Marina.Store.Tests.Commands
 
             // Act
 
-            var cmd = new FulfillRegistrationRequestCommand(Db, _passwordFormatPolicy.Object);
+            var cmd = new FulfillRegistrationRequestCommand(Db, _passwordFormatPolicy.Object, _passwordHashPolicy.Object);
             var result = cmd.Execute(request.Id, PASSWORD);
             Db.SaveChanges();
 

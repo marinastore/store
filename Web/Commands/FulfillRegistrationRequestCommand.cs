@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
 using Marina.Store.Web.DataAccess;
 using Marina.Store.Web.Infrastructure.Commands;
 using Marina.Store.Web.Models;
@@ -13,11 +11,13 @@ namespace Marina.Store.Web.Commands
     {
         private readonly StoreDbContext _db;
         private readonly PasswordFormatPolicy _passwordPolicy;
+        private readonly PasswordHashPolicy _passwordHashPolicy;
 
-        public FulfillRegistrationRequestCommand(StoreDbContext db, PasswordFormatPolicy passwordPolicy)
+        public FulfillRegistrationRequestCommand(StoreDbContext db, PasswordFormatPolicy passwordPolicy, PasswordHashPolicy hashPolicy)
         {
             _db = db;
             _passwordPolicy = passwordPolicy;
+            _passwordHashPolicy = hashPolicy;
         }
 
         public State IncorrectPasswordFormat;
@@ -78,14 +78,9 @@ namespace Marina.Store.Web.Commands
             return newCart;
         }
 
-        private static User CreateUser(RegistrationRequest request, string password)
+        private User CreateUser(RegistrationRequest request, string password)
         {
-            string passwordHash;
-            using (var sha1 = new SHA1CryptoServiceProvider())
-            {
-                // TODO: использовать соль!
-                passwordHash = Encoding.UTF8.GetString(sha1.ComputeHash(Encoding.UTF8.GetBytes(password)));
-            }
+            string passwordHash = _passwordHashPolicy.Apply(password);
 
             var user = new User
             {
